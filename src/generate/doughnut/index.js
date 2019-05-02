@@ -1,6 +1,6 @@
 const { schnorrkelSign } = require("@cennznet/util");
 
-const createCertificate = require("./objectToCertificate");
+const objectToCertificate = require("./objectToCertificate");
 const createCompact = require("./createCompact");
 const compactToJSON = require("./compactToJSON");
 
@@ -11,13 +11,15 @@ const generateDoughnut = (
   not_before,
   permissions
 ) => {
-  const certificate = createCertificate(
-    issuerKeyPair.publicKey,
-    holderPublicKey,
+  // TODO verify certificate structure
+  const certificate = objectToCertificate({
+    issuer: issuerKeyPair.publicKey,
+    holder: holderPublicKey,
     expiry,
     not_before,
-    permissions
-  );
+    permissions,
+    version: 0
+  });
 
   const signature = schnorrkelSign(certificate, issuerKeyPair);
   const compact = createCompact(certificate, signature);

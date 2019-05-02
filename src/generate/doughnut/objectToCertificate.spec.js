@@ -1,4 +1,4 @@
-const createCertificate = require("./createCertificate");
+const objectToCertificate = require("./objectToCertificate");
 const { stringToU8a } = require("@cennznet/util");
 
 const issuerPublicKey = new Uint8Array([1, 2, 3, 4, 5, 6]);
@@ -10,17 +10,9 @@ const permissions = {
   myPermissions: true
 };
 
-describe("when using createCertificate", () => {
+describe("when using objectToCertificate", () => {
   it("should return the correct u8a", () => {
-    const result = createCertificate(
-      issuerPublicKey,
-      holderPublicKey,
-      expiry,
-      not_before,
-      permissions
-    );
-
-    const expectedCertificateObject = {
+    const input = {
       issuer: issuerPublicKey,
       holder: holderPublicKey,
       expiry,
@@ -29,9 +21,9 @@ describe("when using createCertificate", () => {
       version: 0
     };
 
-    const expected = stringToU8a(
-      btoa(JSON.stringify(expectedCertificateObject))
-    );
+    const result = objectToCertificate(input);
+
+    const expected = stringToU8a(btoa(JSON.stringify(input)));
 
     expect(result).toEqual(expected);
   });
