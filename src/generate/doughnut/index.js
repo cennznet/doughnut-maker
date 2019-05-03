@@ -1,6 +1,6 @@
 const { schnorrkelSign } = require("@cennznet/util");
 
-const objectToCertificate = require("./objectToCertificate");
+const { objectToCertificate } = require("./certificateMappers");
 const createCompact = require("./createCompact");
 const compactToJSON = require("./compactToJSON");
 
