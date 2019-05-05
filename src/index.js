@@ -1,9 +1,7 @@
-const { doughnut } = require("./generate");
+const generate = require("./generate");
 
 const doughnutMaker = {
-  generate: {
-    doughnut
-  }
+  generate
 };
 
 module.exports = doughnutMaker;
