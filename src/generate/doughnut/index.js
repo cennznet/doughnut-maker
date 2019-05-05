@@ -4,6 +4,8 @@ const { objectToCertificate } = require("./certificateMappers");
 const createCompact = require("./createCompact");
 const compactToJSON = require("./compactToJSON");
 
+const DEFAULT_CERTIFICATE_VERSION = 0;
+
 const verifyInput = (
   issuerKeyPair = {},
   holderPublicKey,
@@ -67,7 +69,7 @@ const generateDoughnut = (
     expiry,
     not_before,
     permissions,
-    version: 0
+    version: DEFAULT_CERTIFICATE_VERSION
   });
 
   const signature = schnorrkelSign(certificate, issuerKeyPair);
