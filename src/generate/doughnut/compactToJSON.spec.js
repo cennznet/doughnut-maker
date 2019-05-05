@@ -1,9 +1,9 @@
 const compactToJSON = require("./compactToJSON");
-const { objectToCertificate } = require("./certificateMappers");
+const { objectToCertificateU8a } = require("./certificateMappers");
 
 const FULL_STOP_ASCII = 46;
 
-const certificateObject = {
+const certificateObj = {
   issuer: new Uint8Array([1, 2, 3, 4]),
   holder: new Uint8Array([4, 3, 2, 1]),
   expiry: 555,
@@ -11,7 +11,7 @@ const certificateObject = {
   permissions: { data: "here" },
   version: 0
 };
-const certificateUInt8Array = objectToCertificate(certificateObject);
+const certificateUInt8Array = objectToCertificateU8a(certificateObj);
 
 describe("when using compactToJSON", () => {
   it("should return the certificate as an object and signature as UInt8Array", () => {
@@ -27,7 +27,7 @@ describe("when using compactToJSON", () => {
     const result = compactToJSON(compact);
 
     const expected = {
-      certificate: certificateObject,
+      certificate: certificateObj,
       signature: new Uint8Array([5, 3, 2, 1])
     };
 
