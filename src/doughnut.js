@@ -1,4 +1,4 @@
-const u8aToHex = require("@cennznet/util");
+const { u8aToHex } = require("@cennznet/util");
 const compactToJSON = require("./generate/doughnut/compactToJSON");
 
 module.exports = class Doughnut extends Uint8Array {

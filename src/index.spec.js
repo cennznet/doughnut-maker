@@ -2,7 +2,8 @@ const {
   schnorrkelKeypairFromSeed,
   stringToU8a,
   cryptoWaitReady,
-  schnorrkelVerify
+  schnorrkelVerify,
+  u8aToHex
 } = require("@cennznet/util");
 const doughnutMaker = require("./");
 const {
@@ -77,6 +78,13 @@ describe("when generating doughnut", () => {
     expect(
       schnorrkelVerify(certificateU8a, signature, issuerKeyPair.publicKey)
     ).toBe(true);
+  });
+
+  it("doughnut toHex returns doughtnut as hex", () => {
+    const hex = doughnut.toHex();
+
+    const expectedHex = u8aToHex(doughnut);
+    expect(hex).toEqual(expectedHex);
   });
 
   describe("input verification", () => {
