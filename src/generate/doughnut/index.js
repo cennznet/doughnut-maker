@@ -2,7 +2,7 @@ const { schnorrkelSign } = require("@cennznet/util");
 
 const { objectToCertificateU8a } = require("./certificateMappers");
 const createCompact = require("./createCompact");
-const compactToJSON = require("./compactToJSON");
+const Doughnut = require("../../doughnut");
 
 const DEFAULT_CERTIFICATE_VERSION = 0;
 
@@ -62,7 +62,6 @@ const generateDoughnut = (
 ) => {
   verifyInput(issuerKeyPair, holderPublicKey, expiry, not_before, permissions);
 
-  // TODO verify certificate structure
   const certificateU8a = objectToCertificateU8a({
     issuer: issuerKeyPair.publicKey,
     holder: holderPublicKey,
@@ -75,10 +74,7 @@ const generateDoughnut = (
   const signature = schnorrkelSign(certificateU8a, issuerKeyPair);
   const compact = createCompact(certificateU8a, signature);
 
-  return {
-    value: compact,
-    toJSON: () => compactToJSON(compact)
-  };
+  return new Doughnut(compact);
 };
 
 module.exports = generateDoughnut;

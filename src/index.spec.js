@@ -8,6 +8,7 @@ const doughnutMaker = require("./");
 const {
   objectToCertificateU8a
 } = require("./generate/doughnut/certificateMappers");
+const Doughnut = require("./doughnut");
 const createCompact = require("./generate/doughnut/createCompact");
 
 let issuerKeyPair;
@@ -38,6 +39,46 @@ beforeAll(async () => {
 });
 
 describe("when generating doughnut", () => {
+  it("should be an instance of Doughnut", () => {
+    expect(doughnut).toBeInstanceOf(Doughnut);
+  });
+
+  test("doughnut should be made from certificate and signature", () => {
+    const { certificate, signature } = doughnut.toJSON();
+
+    const certificateU8a = objectToCertificateU8a(certificate);
+
+    const expectedDoughnut = new Doughnut(
+      createCompact(certificateU8a, signature)
+    );
+    expect(doughnut).toEqual(expectedDoughnut);
+  });
+
+  it("should return the correct certificate", () => {
+    const { certificate } = doughnut.toJSON();
+
+    const expectedcertificateObj = {
+      issuer: issuerKeyPair.publicKey,
+      holder: holderKeyPair.publicKey,
+      expiry,
+      not_before,
+      permissions,
+      version: 0
+    };
+
+    expect(certificate).toEqual(expectedcertificateObj);
+  });
+
+  it("should return the correct signature", () => {
+    // assuming that the certificate is correct from above
+    const { certificate, signature } = doughnut.toJSON();
+
+    const certificateU8a = objectToCertificateU8a(certificate);
+    expect(
+      schnorrkelVerify(certificateU8a, signature, issuerKeyPair.publicKey)
+    ).toBe(true);
+  });
+
   describe("input verification", () => {
     it("should throw if issuerKeyPair publicKey not u8a", () => {
       expect(() =>
@@ -166,42 +207,5 @@ describe("when generating doughnut", () => {
         )
       ).toThrow("Input permissions should be an object");
     });
-  });
-  it("should have properties value and toJSON", () => {
-    expect(doughnut.value).toBeInstanceOf(Uint8Array);
-    expect(typeof doughnut.toJSON).toBe("function");
-  });
-
-  test("value should be made from certificate and signature", () => {
-    const { value } = doughnut;
-    const { certificate, signature } = doughnut.toJSON();
-
-    const certificateU8a = objectToCertificateU8a(certificate);
-    expect(value).toEqual(createCompact(certificateU8a, signature));
-  });
-
-  it("should return the correct certificate", () => {
-    const { certificate } = doughnut.toJSON();
-
-    const expectedcertificateObj = {
-      issuer: issuerKeyPair.publicKey,
-      holder: holderKeyPair.publicKey,
-      expiry,
-      not_before,
-      permissions,
-      version: 0
-    };
-
-    expect(certificate).toEqual(expectedcertificateObj);
-  });
-
-  it("should return the correct signature", () => {
-    // assuming that the certificate is correct from above
-    const { certificate, signature } = doughnut.toJSON();
-
-    const certificateU8a = objectToCertificateU8a(certificate);
-    expect(
-      schnorrkelVerify(certificateU8a, signature, issuerKeyPair.publicKey)
-    ).toBe(true);
   });
 });
