@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@cennznet/util": "^0.12.0",
+    "atob": "^2.1.2",
+    "btoa": "^1.2.1",
     "jest": "^24.7.1"
   },
   "devDependencies": {

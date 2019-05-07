@@ -1,8 +1,9 @@
+const { stringToU8a } = require("@cennznet/util");
+const btoa = require("btoa");
 const {
   objectToCertificateU8a,
   certificateU8aToObject
 } = require("./certificateMappers");
-const { stringToU8a } = require("@cennznet/util");
 
 const certificateObj = {
   issuer: new Uint8Array([1, 2, 3, 4, 5, 6]),

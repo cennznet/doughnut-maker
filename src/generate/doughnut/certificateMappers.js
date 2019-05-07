@@ -1,3 +1,5 @@
+const atob = require("atob");
+const btoa = require("btoa");
 const { stringToU8a, u8aToString } = require("@cennznet/util");
 
 const arrayMapToU8a = arrayMap => {
