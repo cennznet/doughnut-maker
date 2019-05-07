@@ -1,4 +1,4 @@
-const { stringToU8a } = require("@cennznet/util");
+const { stringToU8a } = require("@polkadot/util");
 const btoa = require("btoa");
 const {
   objectToCertificateU8a,

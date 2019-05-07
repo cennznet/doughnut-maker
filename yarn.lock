@@ -350,6 +350,46 @@
   resolved "https://npm-proxy.fury.io/centrality/~/d/%40plugnet%2Fwasm-crypto/%40plugnet%2Fwasm-crypto-0.8.1#0a5cd03cfbb184d5ebe5f23dc28a27960e0284d4"
   integrity sha1-ClzQPPuxhNXr5fI9woonlg4ChNQ=
 
+"@polkadot/util-crypto@^0.76.1":
+  version "0.76.1"
+  resolved "https://registry.npmjs.org/@polkadot/util-crypto/-/util-crypto-0.76.1.tgz#6285c4e1d04d07d32218ec02bed238ec412ca5b3"
+  integrity sha512-fxqJBs+CITL/fZtiXGv6WgO+Z3Co+80zF85951P6CshK+Csz/2tP4B+UHNMEKNxTkk0b65NYJP/0Ie9OjgsCFw==
+  dependencies:
+    "@babel/runtime" "^7.4.3"
+    "@polkadot/util" "^0.76.1"
+    "@polkadot/wasm-crypto" "^0.8.1"
+    "@types/bip39" "^2.4.2"
+    "@types/pbkdf2" "^3.0.0"
+    "@types/secp256k1" "^3.5.0"
+    "@types/webassembly-js-api" "^0.0.2"
+    "@types/xxhashjs" "^0.2.1"
+    bip39 "^2.5.0"
+    blakejs "^1.1.0"
+    js-sha3 "^0.8.0"
+    secp256k1 "^3.6.2"
+    tweetnacl "^1.0.1"
+    xxhashjs "^0.2.2"
+
+"@polkadot/util@^0.76.1":
+  version "0.76.1"
+  resolved "https://registry.npmjs.org/@polkadot/util/-/util-0.76.1.tgz#d21e7f4c22c1c374a7811055f2771a0a90131624"
+  integrity sha512-N1WRnct7CSBUx6cj3SNkAT4vdznYungsMSURiYDTsHpV1EJUI16tPj//OFEl548/0q3N58cePyEn0qB0hFi6zA==
+  dependencies:
+    "@babel/runtime" "^7.4.3"
+    "@types/bn.js" "^4.11.5"
+    "@types/deasync" "^0.1.0"
+    "@types/ip-regex" "^3.0.0"
+    bn.js "^4.11.8"
+    camelcase "^5.3.0"
+    chalk "^2.4.2"
+    ip-regex "^4.0.0"
+    moment "^2.24.0"
+
+"@polkadot/wasm-crypto@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@polkadot/wasm-crypto/-/wasm-crypto-0.8.1.tgz#aa522577c79e0fe0825c64df814f0c0177a66683"
+  integrity sha512-Z88mi23WUla6EOuE3sSmleaYjabUc7XwhVHyj78GwfmpF0cUo9mZWxJEiT67de6p9Wz70mSZRUQgpg9JUez0BA==
+
 "@types/babel__core@^7.1.0":
   version "7.1.1"
   resolved "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.1.tgz#ce9a9e5d92b7031421e1d0d74ae59f572ba48be6"

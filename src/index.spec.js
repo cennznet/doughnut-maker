@@ -1,10 +1,9 @@
+const { stringToU8a, u8aToHex } = require("@polkadot/util");
 const {
-  schnorrkelKeypairFromSeed,
-  stringToU8a,
   cryptoWaitReady,
-  schnorrkelVerify,
-  u8aToHex
-} = require("@cennznet/util");
+  schnorrkelKeypairFromSeed,
+  schnorrkelVerify
+} = require("@polkadot/util-crypto");
 const doughnutMaker = require("./");
 const {
   objectToCertificateU8a

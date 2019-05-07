@@ -1,4 +1,4 @@
-const { schnorrkelSign } = require("@cennznet/util");
+const { schnorrkelSign } = require("@polkadot/util-crypto");
 
 const { objectToCertificateU8a } = require("./certificateMappers");
 const createCompact = require("./createCompact");
