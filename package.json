@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cennznet/util": "^0.12.0",
+    "@polkadot/util-crypto": "^0.76.1",
+    "atob": "^2.1.2",
+    "btoa": "^1.2.1",
     "jest": "^24.7.1"
   },
   "devDependencies": {
