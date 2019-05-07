@@ -1,3 +1,4 @@
+const { u8aToHex } = require("@polkadot/util");
 const compactToJSON = require("./compactToJSON");
 const { objectToCertificateU8a } = require("./certificateMappers");
 
@@ -15,20 +16,18 @@ const certificateUInt8Array = objectToCertificateU8a(certificateObj);
 
 describe("when using compactToJSON", () => {
   it("should return the certificate as an object and signature as UInt8Array", () => {
+    const signatureU8a = new Uint8Array([5, 3, 2, 1]);
     const compact = new Uint8Array([
       ...certificateUInt8Array,
       FULL_STOP_ASCII,
-      5,
-      3,
-      2,
-      1
+      ...signatureU8a
     ]);
 
     const result = compactToJSON(compact);
 
     const expected = {
       certificate: certificateObj,
-      signature: new Uint8Array([5, 3, 2, 1])
+      signature: u8aToHex(signatureU8a)
     };
 
     expect(result).toEqual(expected);
