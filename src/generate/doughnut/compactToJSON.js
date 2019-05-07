@@ -1,5 +1,8 @@
 const { u8aToHex } = require("@polkadot/util");
-const { certificateU8aToObject } = require("./certificateMappers");
+const {
+  certificateU8aToObject,
+  certificateObjToCamelCase
+} = require("./certificateMappers");
 const FULL_STOP_ASCII = 46;
 
 const destructureCompact = compact => {
@@ -15,7 +18,9 @@ const compactToJSON = compact => {
   const { certificateU8a, signatureU8a } = destructureCompact(compact);
 
   return {
-    certificate: certificateU8aToObject(certificateU8a),
+    certificate: certificateObjToCamelCase(
+      certificateU8aToObject(certificateU8a)
+    ),
     signature: u8aToHex(signatureU8a)
   };
 };

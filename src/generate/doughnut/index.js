@@ -1,6 +1,9 @@
 const { schnorrkelSign } = require("@polkadot/util-crypto");
 
-const { objectToCertificateU8a } = require("./certificateMappers");
+const {
+  objectToCertificateU8a,
+  certificateObjToSnakeCase
+} = require("./certificateMappers");
 const createCompact = require("./createCompact");
 const Doughnut = require("../../doughnut");
 
@@ -10,7 +13,7 @@ const verifyInput = (
   issuerKeyPair = {},
   holderPublicKey,
   expiry,
-  not_before,
+  notBefore,
   permissions
 ) => {
   if (
@@ -44,8 +47,8 @@ const verifyInput = (
     throw new Error("Input expiry should be unix timestamp number");
   }
 
-  if (typeof not_before !== "number") {
-    throw new Error("Input not_before should be unix timestamp number");
+  if (typeof notBefore !== "number") {
+    throw new Error("Input notBefore should be unix timestamp number");
   }
 
   if (!(typeof permissions === "object" && permissions !== null)) {
@@ -57,22 +60,23 @@ const generateDoughnut = (
   issuerKeyPair,
   holderPublicKey,
   expiry,
-  not_before,
+  notBefore,
   permissions
 ) => {
-  verifyInput(issuerKeyPair, holderPublicKey, expiry, not_before, permissions);
+  verifyInput(issuerKeyPair, holderPublicKey, expiry, notBefore, permissions);
 
-  const certificateU8a = objectToCertificateU8a({
+  const certificateObjAsSnakeCase = certificateObjToSnakeCase({
     issuer: issuerKeyPair.publicKey,
     holder: holderPublicKey,
     expiry,
-    not_before,
+    notBefore,
     permissions,
     version: DEFAULT_CERTIFICATE_VERSION
   });
+  const certificateU8a = objectToCertificateU8a(certificateObjAsSnakeCase);
 
-  const signature = schnorrkelSign(certificateU8a, issuerKeyPair);
-  const compact = createCompact(certificateU8a, signature);
+  const signatureU8a = schnorrkelSign(certificateU8a, issuerKeyPair);
+  const compact = createCompact(certificateU8a, signatureU8a);
 
   return new Doughnut(compact);
 };

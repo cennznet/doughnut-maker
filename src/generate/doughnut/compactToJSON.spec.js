@@ -1,6 +1,9 @@
 const { u8aToHex } = require("@polkadot/util");
 const compactToJSON = require("./compactToJSON");
-const { objectToCertificateU8a } = require("./certificateMappers");
+const {
+  objectToCertificateU8a,
+  certificateObjToCamelCase
+} = require("./certificateMappers");
 
 const FULL_STOP_ASCII = 46;
 
@@ -26,7 +29,7 @@ describe("when using compactToJSON", () => {
     const result = compactToJSON(compact);
 
     const expected = {
-      certificate: certificateObj,
+      certificate: certificateObjToCamelCase(certificateObj),
       signature: u8aToHex(signatureU8a)
     };
 

@@ -1,4 +1,4 @@
-const { stringToU8a, u8aToHex } = require("@polkadot/util");
+const { stringToU8a, u8aToHex, hexToU8a } = require("@polkadot/util");
 const {
   cryptoWaitReady,
   schnorrkelKeypairFromSeed,
@@ -6,7 +6,8 @@ const {
 } = require("@polkadot/util-crypto");
 const doughnutMaker = require("./");
 const {
-  objectToCertificateU8a
+  objectToCertificateU8a,
+  certificateObjToSnakeCase
 } = require("./generate/doughnut/certificateMappers");
 const Doughnut = require("./doughnut");
 const createCompact = require("./generate/doughnut/createCompact");
@@ -15,7 +16,7 @@ let issuerKeyPair;
 let holderKeyPair;
 let doughnut;
 const expiry = 5555;
-const not_before = 1234;
+const notBefore = 1234;
 const permissions = {
   has: "permissions"
 };
@@ -33,7 +34,7 @@ beforeAll(async () => {
     issuerKeyPair,
     holderKeyPair.publicKey,
     expiry,
-    not_before,
+    notBefore,
     permissions
   );
 });
@@ -46,11 +47,14 @@ describe("when generating doughnut", () => {
   test("doughnut should be made from certificate and signature", () => {
     const { certificate, signature } = doughnut.toJSON();
 
-    const certificateU8a = objectToCertificateU8a(certificate);
+    const certificateObjAsSnakeCase = certificateObjToSnakeCase(certificate);
+    const certificateU8a = objectToCertificateU8a(certificateObjAsSnakeCase);
 
+    const signatureU8a = hexToU8a(signature);
     const expectedDoughnut = new Doughnut(
-      createCompact(certificateU8a, signature)
+      createCompact(certificateU8a, signatureU8a)
     );
+
     expect(doughnut).toEqual(expectedDoughnut);
   });
 
@@ -61,7 +65,7 @@ describe("when generating doughnut", () => {
       issuer: issuerKeyPair.publicKey,
       holder: holderKeyPair.publicKey,
       expiry,
-      not_before,
+      notBefore,
       permissions,
       version: 0
     };
@@ -72,10 +76,12 @@ describe("when generating doughnut", () => {
   it("should return the correct signature", () => {
     // assuming that the certificate is correct from above
     const { certificate, signature } = doughnut.toJSON();
+    const certificateObjAsSnakeCase = certificateObjToSnakeCase(certificate);
+    const signatureU8a = hexToU8a(signature);
 
-    const certificateU8a = objectToCertificateU8a(certificate);
+    const certificateU8a = objectToCertificateU8a(certificateObjAsSnakeCase);
     expect(
-      schnorrkelVerify(certificateU8a, signature, issuerKeyPair.publicKey)
+      schnorrkelVerify(certificateU8a, signatureU8a, issuerKeyPair.publicKey)
     ).toBe(true);
   });
 
@@ -96,7 +102,7 @@ describe("when generating doughnut", () => {
           },
           holderKeyPair.publicKey,
           expiry,
-          not_before,
+          notBefore,
           permissions
         )
       ).toThrow(
@@ -113,7 +119,7 @@ describe("when generating doughnut", () => {
           },
           holderKeyPair.publicKey,
           expiry,
-          not_before,
+          notBefore,
           permissions
         )
       ).toThrow(
@@ -130,7 +136,7 @@ describe("when generating doughnut", () => {
           },
           holderKeyPair.publicKey,
           expiry,
-          not_before,
+          notBefore,
           permissions
         )
       ).toThrow(
@@ -147,7 +153,7 @@ describe("when generating doughnut", () => {
           },
           holderKeyPair.publicKey,
           expiry,
-          not_before,
+          notBefore,
           permissions
         )
       ).toThrow(
@@ -161,7 +167,7 @@ describe("when generating doughnut", () => {
           issuerKeyPair,
           "6".repeat(32),
           expiry,
-          not_before,
+          notBefore,
           permissions
         )
       ).toThrow("Input HolderPublicKey should be a UInt8Array of length 32");
@@ -173,13 +179,13 @@ describe("when generating doughnut", () => {
           issuerKeyPair,
           new Uint8Array([1, 2, 3, 4]),
           expiry,
-          not_before,
+          notBefore,
           permissions
         )
       ).toThrow("Input HolderPublicKey should be a UInt8Array of length 32");
     });
 
-    it("should throw if not_before not a number", () => {
+    it("should throw if notBefore not a number", () => {
       expect(() =>
         doughnutMaker.generate.doughnut(
           issuerKeyPair,
@@ -188,7 +194,7 @@ describe("when generating doughnut", () => {
           "",
           permissions
         )
-      ).toThrow("Input not_before should be unix timestamp number");
+      ).toThrow("Input notBefore should be unix timestamp number");
     });
 
     it("should throw if expiry not a number", () => {
@@ -197,7 +203,7 @@ describe("when generating doughnut", () => {
           issuerKeyPair,
           holderKeyPair.publicKey,
           "",
-          not_before,
+          notBefore,
           permissions
         )
       ).toThrow("Input expiry should be unix timestamp number");
@@ -209,7 +215,7 @@ describe("when generating doughnut", () => {
           issuerKeyPair,
           holderKeyPair.publicKey,
           expiry,
-          not_before,
+          notBefore,
           () => {}
         )
       ).toThrow("Input permissions should be an object");
