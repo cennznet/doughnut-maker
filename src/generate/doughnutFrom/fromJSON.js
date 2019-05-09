@@ -1,5 +1,5 @@
 const { hexToU8a } = require("@polkadot/util");
-const createCompact = require("../doughnut/createCompact");
+const { createCompact } = require("../doughnut/compactMappers");
 const fromUint8Array = require("./fromUint8Array");
 const {
   objectToCertificateU8a,

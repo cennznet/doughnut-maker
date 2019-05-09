@@ -10,7 +10,7 @@ const {
   certificateObjToSnakeCase
 } = require("./generate/doughnut/certificateMappers");
 const Doughnut = require("./doughnut");
-const createCompact = require("./generate/doughnut/createCompact");
+const { createCompact } = require("./generate/doughnut/compactMappers");
 
 let issuerKeyPair;
 let holderKeyPair;
