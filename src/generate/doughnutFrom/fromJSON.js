@@ -6,6 +6,7 @@ const {
   certificateObjToSnakeCase
 } = require("../doughnut/certificateMappers");
 const { isEvenHex } = require("../../util");
+const compactPrefix = require("../doughnut/compactPrefix");
 
 const isObject = value => {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -37,7 +38,7 @@ const generateDoughnutFromJSON = compactJSON => {
   );
   const signatureU8a = hexToU8a(signatureHexString);
 
-  const compact = createCompact(certificateU8a, signatureU8a);
+  const compact = createCompact(compactPrefix, certificateU8a, signatureU8a);
   return fromUint8Array(compact);
 };
 

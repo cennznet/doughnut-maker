@@ -6,8 +6,7 @@ const {
 } = require("./certificateMappers");
 const { createCompact } = require("./compactMappers");
 const Doughnut = require("../../doughnut");
-
-const DEFAULT_CERTIFICATE_VERSION = 0;
+const compactPrefix = require("./compactPrefix");
 
 const verifyInput = (
   issuerKeyPair = {},
@@ -70,13 +69,12 @@ const generateDoughnut = (
     holder: holderPublicKey,
     expiry,
     notBefore,
-    permissions,
-    version: DEFAULT_CERTIFICATE_VERSION
+    permissions
   });
   const certificateU8a = objectToCertificateU8a(certificateObjAsSnakeCase);
 
   const signatureU8a = schnorrkelSign(certificateU8a, issuerKeyPair);
-  const compact = createCompact(certificateU8a, signatureU8a);
+  const compact = createCompact(compactPrefix, certificateU8a, signatureU8a);
 
   return new Doughnut(compact);
 };

@@ -4,6 +4,7 @@ const {
   objectToCertificateU8a,
   certificateObjToCamelCase
 } = require("./certificateMappers");
+const compactPrefix = require("../doughnut/compactPrefix");
 
 const FULL_STOP_ASCII = 46;
 
@@ -12,8 +13,7 @@ const certificateObj = {
   holder: new Uint8Array([4, 3, 2, 1]),
   expiry: 555,
   not_before: 1234,
-  permissions: { data: "here" },
-  version: 0
+  permissions: { data: "here" }
 };
 const certificateUInt8Array = objectToCertificateU8a(certificateObj);
 
@@ -21,6 +21,7 @@ describe("when using compactToJSON", () => {
   it("should return the certificate as an object and signature as UInt8Array", () => {
     const signatureU8a = new Uint8Array([5, 3, 2, 1]);
     const compact = new Uint8Array([
+      ...compactPrefix,
       ...certificateUInt8Array,
       FULL_STOP_ASCII,
       ...signatureU8a

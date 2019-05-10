@@ -6,6 +6,7 @@ const {
   objectToCertificateU8a,
   certificateObjToSnakeCase
 } = require("../doughnut/certificateMappers");
+const compactPrefix = require("../doughnut/compactPrefix");
 
 const certificateObj = {
   issuer: new Uint8Array([1, 2, 3, 4, 5, 6]),
@@ -14,8 +15,7 @@ const certificateObj = {
   notBefore: 654321,
   permissions: {
     myPermissions: true
-  },
-  version: 0
+  }
 };
 const mockSignature = "0x1234";
 
@@ -29,7 +29,11 @@ describe("when generating doughnut with JSON", () => {
     );
 
     const expectedDoughnut = new Doughnut(
-      createCompact(certificateU8aSnakeCase, hexToU8a(mockSignature))
+      createCompact(
+        compactPrefix,
+        certificateU8aSnakeCase,
+        hexToU8a(mockSignature)
+      )
     );
     expect(result).toEqual(expectedDoughnut);
   });
