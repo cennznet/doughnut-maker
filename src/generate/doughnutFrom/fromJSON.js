@@ -12,8 +12,6 @@ const isObject = value => {
 };
 
 const validate = compactJSON => {
-  compactJSON.signature;
-
   if (!isObject(compactJSON.certificate)) {
     throw new Error(
       "Compact JSON should have a property 'certificate' that is a certificate object"
