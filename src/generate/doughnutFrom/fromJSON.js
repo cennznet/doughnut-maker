@@ -5,20 +5,10 @@ const {
   objectToCertificateU8a,
   certificateObjToSnakeCase
 } = require("../doughnut/certificateMappers");
-const { isEvenHex } = require("../../util");
-
-const isObject = value => {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-};
+const { isEvenHex, validateCertificate } = require("../../util");
 
 const validate = compactJSON => {
-  compactJSON.signature;
-
-  if (!isObject(compactJSON.certificate)) {
-    throw new Error(
-      "Compact JSON should have a property 'certificate' that is a certificate object"
-    );
-  }
+  validateCertificate(compactJSON.certificate);
 
   if (!isEvenHex(compactJSON.signature)) {
     throw new Error(
