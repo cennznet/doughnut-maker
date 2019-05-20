@@ -39,7 +39,7 @@ const ObjectReplaceKeyInOrder = (obj, prevKey, nextKey) => {
 
 /*
 In the version 0 of the compact encoding, the case and order of the certificate JSON affects
-the codec output.
+the compact output.
 The javascript input and JSON output have camelcase for this SDK, however the JSON required 
 to create the compact uses snakecase.
 When case and order of the certificate dont matter, we can simplify the logic of the code
