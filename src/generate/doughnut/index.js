@@ -69,7 +69,8 @@ const generateDoughnut = (
     holder: holderPublicKey,
     expiry,
     notBefore,
-    permissions
+    permissions,
+    version: compactPrefix[0]
   });
   const certificateU8a = objectToCertificateU8a(certificateObjAsSnakeCase);
 

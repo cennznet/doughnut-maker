@@ -1,12 +1,12 @@
-const { hexToU8a } = require('@polkadot/util');
-const { createCompact } = require('../doughnut/compactMappers');
-const fromUint8Array = require('./fromUint8Array');
+const { hexToU8a } = require("@polkadot/util");
+const { createCompact } = require("../doughnut/compactMappers");
+const fromUint8Array = require("./fromUint8Array");
 const {
   objectToCertificateU8a,
-  certificateObjToSnakeCase,
-} = require('../doughnut/certificateMappers');
-const { isEvenHex, validateCertificate } = require('../../util');
-const compactPrefix = require('../doughnut/compactPrefix');
+  certificateObjToSnakeCase
+} = require("../doughnut/certificateMappers");
+const { isEvenHex, validateCertificate } = require("../../util");
+const compactPrefix = require("../doughnut/compactPrefix");
 
 const validate = compactJSON => {
   validateCertificate(compactJSON.certificate);

@@ -14,7 +14,8 @@ const certificateObjSnake = {
   not_before: 654321,
   permissions: {
     myPermissions: true
-  }
+  },
+  version: 0
 };
 
 const certificateObjCamel = {
@@ -24,7 +25,8 @@ const certificateObjCamel = {
   notBefore: 654321,
   permissions: {
     myPermissions: true
-  }
+  },
+  version: 0
 };
 
 describe("when using objectToCertificateU8a", () => {
@@ -55,7 +57,8 @@ describe("when using certificateObjectToCamelCase", () => {
       holder: certificateObjSnake.holder,
       expiry: certificateObjSnake.expiry,
       notBefore: certificateObjSnake.not_before,
-      permissions: certificateObjSnake.permissions
+      permissions: certificateObjSnake.permissions,
+      version: certificateObjSnake.version
     };
     expect(result).toEqual(expected);
   });
@@ -68,7 +71,8 @@ describe("when using certificateObjectToCamelCase", () => {
       holder: certificateObjSnake.holder,
       expiry: certificateObjSnake.expiry,
       notBefore: certificateObjSnake.not_before,
-      permissions: certificateObjSnake.permissions
+      permissions: certificateObjSnake.permissions,
+      version: certificateObjSnake.version
     };
     const resultKeys = Object.keys(result);
     const resultValues = Object.values(result);
@@ -89,7 +93,8 @@ describe("when using certificateObjectToSnakeCase", () => {
       holder: certificateObjCamel.holder,
       expiry: certificateObjCamel.expiry,
       not_before: certificateObjCamel.notBefore,
-      permissions: certificateObjCamel.permissions
+      permissions: certificateObjCamel.permissions,
+      version: certificateObjCamel.version
     };
     expect(result).toEqual(expected);
   });
@@ -102,7 +107,8 @@ describe("when using certificateObjectToSnakeCase", () => {
       holder: certificateObjCamel.holder,
       expiry: certificateObjCamel.expiry,
       not_before: certificateObjCamel.notBefore,
-      permissions: certificateObjCamel.permissions
+      permissions: certificateObjCamel.permissions,
+      version: certificateObjCamel.version
     };
     const resultKeys = Object.keys(result);
     const resultValues = Object.values(result);

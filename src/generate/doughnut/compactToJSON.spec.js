@@ -13,7 +13,8 @@ const certificateObj = {
   holder: new Uint8Array([4, 3, 2, 1]),
   expiry: 555,
   not_before: 1234,
-  permissions: { data: "here" }
+  permissions: { data: "here" },
+  version: 0
 };
 const certificateUInt8Array = objectToCertificateU8a(certificateObj);
 

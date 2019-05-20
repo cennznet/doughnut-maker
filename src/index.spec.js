@@ -67,7 +67,8 @@ describe("when generating doughnut", () => {
       holder: holderKeyPair.publicKey,
       expiry,
       notBefore,
-      permissions
+      permissions,
+      version: 0
     };
 
     expect(certificate).toEqual(expectedcertificateObj);
