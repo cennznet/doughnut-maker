@@ -1,25 +1,15 @@
-const { hexToU8a } = require("@polkadot/util");
-const { createCompact } = require("../doughnut/compactMappers");
-const fromUint8Array = require("./fromUint8Array");
+const { hexToU8a } = require('@polkadot/util');
+const { createCompact } = require('../doughnut/compactMappers');
+const fromUint8Array = require('./fromUint8Array');
 const {
   objectToCertificateU8a,
-  certificateObjToSnakeCase
-} = require("../doughnut/certificateMappers");
-const { isEvenHex } = require("../../util");
-const compactPrefix = require("../doughnut/compactPrefix");
-
-const isObject = value => {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-};
+  certificateObjToSnakeCase,
+} = require('../doughnut/certificateMappers');
+const { isEvenHex, validateCertificate } = require('../../util');
+const compactPrefix = require('../doughnut/compactPrefix');
 
 const validate = compactJSON => {
-  compactJSON.signature;
-
-  if (!isObject(compactJSON.certificate)) {
-    throw new Error(
-      "Compact JSON should have a property 'certificate' that is a certificate object"
-    );
-  }
+  validateCertificate(compactJSON.certificate);
 
   if (!isEvenHex(compactJSON.signature)) {
     throw new Error(
