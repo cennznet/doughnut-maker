@@ -1,4 +1,4 @@
-const createCompact = require("./createCompact");
+const { createCompact } = require("./compactMappers");
 
 const FULL_STOP_ASCII = 46;
 

@@ -5,7 +5,7 @@ const {
 const { hexToU8a, stringToU8a } = require("@polkadot/util");
 const Doughnut = require("../../doughnut");
 const { fromJSON } = require("./index");
-const createCompact = require("../doughnut/createCompact");
+const { createCompact } = require("../doughnut/compactMappers");
 const {
   objectToCertificateU8a,
   certificateObjToSnakeCase

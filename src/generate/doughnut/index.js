@@ -4,7 +4,7 @@ const {
   objectToCertificateU8a,
   certificateObjToSnakeCase
 } = require("./certificateMappers");
-const createCompact = require("./createCompact");
+const { createCompact } = require("./compactMappers");
 const Doughnut = require("../../doughnut");
 
 const DEFAULT_CERTIFICATE_VERSION = 0;
