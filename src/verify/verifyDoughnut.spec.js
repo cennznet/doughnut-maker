@@ -10,6 +10,7 @@ const {
 } = require("../generate/doughnut/certificateMappers");
 const { createCompact } = require("../generate/doughnut/compactMappers");
 const Doughnut = require("../doughnut");
+const compactPrefix = require("../generate/doughnut/compactPrefix");
 
 const ONE_YEAR_IN_SECONDS = 31557600;
 
@@ -46,7 +47,9 @@ describe("when verifying doughnuts", () => {
     const certificateU8a = objectToCertificateU8a(certificateObj);
     const signature = schnorrkelSign(certificateU8a, issuerKeyPair);
 
-    const doughnut = new Doughnut(createCompact(certificateU8a, signature));
+    const doughnut = new Doughnut(
+      createCompact(compactPrefix, certificateU8a, signature)
+    );
 
     expect(verifyDoughnut(doughnut)).toEqual(true);
   });
@@ -61,7 +64,9 @@ describe("when verifying doughnuts", () => {
     const certificateU8a = objectToCertificateU8a(certificateObj);
     const signature = new Uint8Array([1, 2, 3, 4]);
 
-    const doughnut = new Doughnut(createCompact(certificateU8a, signature));
+    const doughnut = new Doughnut(
+      createCompact(compactPrefix, certificateU8a, signature)
+    );
 
     expect(verifyDoughnut(doughnut)).toEqual(false);
   });
@@ -71,7 +76,9 @@ describe("when verifying doughnuts", () => {
     const certificateU8a = objectToCertificateU8a(certificateObj);
     const signature = schnorrkelSign(certificateU8a, issuerKeyPair);
 
-    const doughnut = new Doughnut(createCompact(certificateU8a, signature));
+    const doughnut = new Doughnut(
+      createCompact(compactPrefix, certificateU8a, signature)
+    );
 
     expect(verifyDoughnut(doughnut)).toEqual(false);
   });
@@ -81,7 +88,9 @@ describe("when verifying doughnuts", () => {
     const certificateU8a = objectToCertificateU8a(certificateObj);
     const signature = schnorrkelSign(certificateU8a, issuerKeyPair);
 
-    const doughnut = new Doughnut(createCompact(certificateU8a, signature));
+    const doughnut = new Doughnut(
+      createCompact(compactPrefix, certificateU8a, signature)
+    );
 
     expect(verifyDoughnut(doughnut)).toEqual(false);
   });

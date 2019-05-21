@@ -21,13 +21,14 @@ const generateDoughnutFromJSON = compactJSON => {
   validate(compactJSON);
   const certificateObjCamelCase = compactJSON.certificate;
   const signatureHexString = compactJSON.signature;
+  const prefix = new Uint8Array([certificateObjCamelCase.version]);
 
   const certificateU8a = objectToCertificateU8a(
     certificateObjToSnakeCase(certificateObjCamelCase)
   );
   const signatureU8a = hexToU8a(signatureHexString);
 
-  const compact = createCompact(certificateU8a, signatureU8a);
+  const compact = createCompact(prefix, certificateU8a, signatureU8a);
   return fromUint8Array(compact);
 };
 

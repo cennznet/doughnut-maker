@@ -11,6 +11,7 @@ const {
 } = require("./generate/doughnut/certificateMappers");
 const Doughnut = require("./doughnut");
 const { createCompact } = require("./generate/doughnut/compactMappers");
+const compactPrefix = require("./generate/doughnut/compactPrefix");
 
 let issuerKeyPair;
 let holderKeyPair;
@@ -52,7 +53,7 @@ describe("when generating doughnut", () => {
 
     const signatureU8a = hexToU8a(signature);
     const expectedDoughnut = new Doughnut(
-      createCompact(certificateU8a, signatureU8a)
+      createCompact(compactPrefix, certificateU8a, signatureU8a)
     );
 
     expect(doughnut).toEqual(expectedDoughnut);
