@@ -1,9 +1,9 @@
-const fromUInt8Array = require("./fromUint8Array");
-const fromHex = require("./fromHex");
-const fromJSON = require("./fromJSON");
+const u8a = require("./fromUint8Array");
+const hex = require("./fromHex");
+const json = require("./fromJSON");
 
 module.exports = {
-  fromHex,
-  fromUInt8Array,
-  fromJSON
+  hex,
+  u8a,
+  json
 };
