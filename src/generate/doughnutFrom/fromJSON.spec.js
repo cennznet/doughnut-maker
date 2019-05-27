@@ -15,7 +15,7 @@ const mockSignature = "0x1234";
 let issuerKeyPair;
 let holderKeyPair;
 let certificateObj;
-const version = 52;
+const version = 0;
 
 beforeAll(async () => {
   await cryptoWaitReady();
@@ -46,7 +46,7 @@ describe("when generating doughnut with JSON", () => {
     const certificateU8aSnakeCase = objectToCertificateU8a(
       certificateObjToSnakeCase(certificateObj)
     );
-    const prefix = new Uint8Array([version]);
+    const prefix = new Uint8Array([0, version]);
 
     const expectedDoughnut = new Doughnut(
       createCompact(prefix, certificateU8aSnakeCase, hexToU8a(mockSignature))
