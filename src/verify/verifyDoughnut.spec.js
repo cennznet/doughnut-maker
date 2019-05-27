@@ -11,6 +11,7 @@ const {
 const { createCompact } = require("../generate/doughnut/compactMappers");
 const Doughnut = require("../doughnut");
 const compactPrefix = require("../generate/doughnut/compactPrefix");
+const { SIGNATURE_LENGTH } = require("../constants");
 
 const ONE_YEAR_IN_SECONDS = 31557600;
 
@@ -62,7 +63,7 @@ describe("when verifying doughnuts", () => {
 
   it("should return false if incorrect signature", () => {
     const certificateU8a = objectToCertificateU8a(certificateObj);
-    const signature = new Uint8Array([1, 2, 3, 4]);
+    const signature = new Uint8Array(SIGNATURE_LENGTH);
 
     const doughnut = new Doughnut(
       createCompact(compactPrefix, certificateU8a, signature)
