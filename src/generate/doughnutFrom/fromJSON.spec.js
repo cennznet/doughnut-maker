@@ -4,7 +4,7 @@ const {
 } = require("@polkadot/util-crypto");
 const { hexToU8a, stringToU8a } = require("@polkadot/util");
 const Doughnut = require("../../doughnut");
-const { fromJSON } = require("./index");
+const { json } = require("./index");
 const { createCompact } = require("../doughnut/compactMappers");
 const {
   objectToCertificateU8a,
@@ -15,7 +15,7 @@ const mockSignature = "0x1234";
 let issuerKeyPair;
 let holderKeyPair;
 let certificateObj;
-const version = 52;
+const version = 0;
 
 beforeAll(async () => {
   await cryptoWaitReady();
@@ -41,12 +41,12 @@ beforeAll(async () => {
 describe("when generating doughnut with JSON", () => {
   it("should return a Doughnut with a compact generated from the JSON", () => {
     const input = { certificate: certificateObj, signature: mockSignature };
-    const result = fromJSON(input);
+    const result = json(input);
 
     const certificateU8aSnakeCase = objectToCertificateU8a(
       certificateObjToSnakeCase(certificateObj)
     );
-    const prefix = new Uint8Array([version]);
+    const prefix = new Uint8Array([0, version]);
 
     const expectedDoughnut = new Doughnut(
       createCompact(prefix, certificateU8aSnakeCase, hexToU8a(mockSignature))
@@ -56,19 +56,19 @@ describe("when generating doughnut with JSON", () => {
 
   it("should throw if certificate null", () => {
     const input = { certificate: null, signature: mockSignature };
-    expect(() => fromJSON(input)).toThrow();
+    expect(() => json(input)).toThrow();
   });
 
   it("should throw if certificate array", () => {
     const input = { certificate: [], signature: mockSignature };
 
-    expect(() => fromJSON(input)).toThrow();
+    expect(() => json(input)).toThrow();
   });
 
   it("should throw if signature not a string", () => {
     const input = { certificate: certificateObj, signature: 123 };
 
-    expect(() => fromJSON(input)).toThrow(
+    expect(() => json(input)).toThrow(
       "Compact JSON should have a property 'signature' that is a hex string of even length"
     );
   });
@@ -76,7 +76,7 @@ describe("when generating doughnut with JSON", () => {
   it("should throw if signature string but not hex", () => {
     const input = { certificate: certificateObj, signature: "1234" };
 
-    expect(() => fromJSON(input)).toThrow(
+    expect(() => json(input)).toThrow(
       "Compact JSON should have a property 'signature' that is a hex string of even length"
     );
   });
@@ -84,7 +84,7 @@ describe("when generating doughnut with JSON", () => {
   it("should throw if signature string hex but has odd length", () => {
     const input = { certificate: certificateObj, signature: "0x12345" };
 
-    expect(() => fromJSON(input)).toThrow(
+    expect(() => json(input)).toThrow(
       "Compact JSON should have a property 'signature' that is a hex string of even length"
     );
   });
