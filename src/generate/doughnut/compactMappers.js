@@ -7,7 +7,10 @@ const destructureCompact = compact => {
   const prefixU8a = compact.slice(0, PREFIX_LENGTH);
 
   const certificateLength = compact.length - PREFIX_LENGTH - SIGNATURE_LENGTH;
-  const certificateU8a = compact.slice(PREFIX_LENGTH, certificateLength + 1);
+  const certificateU8a = compact.slice(
+    PREFIX_LENGTH,
+    certificateLength + PREFIX_LENGTH
+  );
   const signatureU8a = compact.slice(PREFIX_LENGTH + certificateLength);
 
   return { prefixU8a, certificateU8a, signatureU8a };
