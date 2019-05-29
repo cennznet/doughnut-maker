@@ -1,9 +1,3 @@
-const generate = require("./generate");
-const verify = require("./verify");
+const doughnut = require("./generate");
 
-const doughnutMaker = {
-  generate,
-  verify
-};
-
-module.exports = doughnutMaker;
+module.exports = doughnut;

@@ -1,7 +1,0 @@
-const SIGNATURE_LENGTH = 64;
-const PREFIX_LENGTH = 2;
-
-module.exports = {
-  SIGNATURE_LENGTH,
-  PREFIX_LENGTH
-};
