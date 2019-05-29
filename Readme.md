@@ -1,6 +1,6 @@
 # Doughnut Maker
 
-The Doughnut maker generates and Validates, and unpacks Doughnut certificates.
+The Doughnut Maker generates, validates, and unpacks Doughnut certificates.
 
 ## Installing
 
