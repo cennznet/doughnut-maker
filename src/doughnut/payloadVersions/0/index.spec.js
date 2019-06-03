@@ -36,8 +36,8 @@ beforeEach(() => {
     holder: holderKeyPair.publicKey,
     expiry: 555555,
     permissions: {
-      something: new Uint8Array(1),
-      somethingElse: new Uint8Array(1)
+      something: new Uint8Array([234, 111, 4, 186]),
+      somethingElse: new Uint8Array([35, 231, 113, 42])
     }
   };
 
@@ -47,8 +47,8 @@ beforeEach(() => {
     expiry: 555555,
     notBefore: 1234,
     permissions: {
-      something: new Uint8Array(1),
-      somethingElse: new Uint8Array(1)
+      something: new Uint8Array([234, 111, 4, 186]),
+      somethingElse: new Uint8Array([35, 231, 113, 42])
     }
   };
 });
