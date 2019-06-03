@@ -58,7 +58,7 @@ beforeEach(() => {
  *********/
 
 describe("Generate Doughnut", () => {
-  it("should generate a valid doughnut", () => {
+  it("should generate a valid doughnut without a not before", () => {
     const payloadVersion = 0;
     const signingMethod = 0;
 
@@ -66,6 +66,20 @@ describe("Generate Doughnut", () => {
       payloadVersion,
       signingMethod,
       v0DoughnutJSON,
+      issuerKeyPair,
+    );
+
+    doughnutSDK.verify(doughnut)
+  });
+
+  it("should generate a valid doughnut with a not before", () => {
+    const payloadVersion = 0;
+    const signingMethod = 0;
+
+    const doughnut = doughnutSDK.generate(
+      payloadVersion,
+      signingMethod,
+      v0DoughnutJSONWithNotBefore,
       issuerKeyPair,
     );
 
