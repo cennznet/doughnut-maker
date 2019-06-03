@@ -5,7 +5,7 @@ const PUBLIC_KEY_BYTE_LENGTH = 32;
 const TIMESTAMP_BYTE_LENGTH = 4;
 const DOMAIN_NAME_BYTE_LENGTH = 16;
 const DOMAIN_LENGTH_BYTE_LENGTH = 2;
-const DOMAIN_LENGTH_ARRAY_ITEM_BYTE_LENGTH =
+const DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH =
   DOMAIN_NAME_BYTE_LENGTH + DOMAIN_LENGTH_BYTE_LENGTH;
 const MAX_TIMESTAMP = 4294967295;
 const MAX_PAYLOAD_BYTE_LENGTH = 65535;
@@ -33,8 +33,8 @@ function getStringFromU8a(array, offset, bytes) {
 
   for (let i = 0; i < bytes; i++) {
     const val = array[offset + i]
-    const character = String.fromCharCode(val);
     if (val > 0) {
+      const character = String.fromCharCode(val);
       result += character;
     }
   }
@@ -133,7 +133,7 @@ function verifyJSON(certificate) {
 
     if (holder.length > MAX_PAYLOAD_BYTE_LENGTH) {
       throw new Error(
-        `bDoughnut permission domain value cannot be longer than ${MAX_PAYLOAD_BYTE_LENGTH}`
+        `Doughnut permission domain value cannot be longer than ${MAX_PAYLOAD_BYTE_LENGTH}`
       );
     }
   })
@@ -152,11 +152,11 @@ function encode(doughnutJSON) {
   const permissionKeys = Object.keys(permissions);
   const domainCount = permissionKeys.length;
   const DOMAIN_LENGTHS_LIST_BYTE_LENGTH =
-    domainCount * DOMAIN_LENGTH_ARRAY_ITEM_BYTE_LENGTH;
+    domainCount * DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH;
 
-  let DOMAIN_PAYLOADS_BYTE_LENGTH = 0;
+  let DOMAIN_PAYLOADS_LIST_BYTE_LENGTH = 0;
   permissionKeys.forEach((key) => {
-    DOMAIN_PAYLOADS_BYTE_LENGTH += permissions[key].length;
+    DOMAIN_PAYLOADS_LIST_BYTE_LENGTH += permissions[key].length;
   });
 
   const hasNotBefore = notBefore != null;
@@ -164,7 +164,7 @@ function encode(doughnutJSON) {
   const doughnutLength =
     getPayloadMetadataLength(hasNotBefore) +
     DOMAIN_LENGTHS_LIST_BYTE_LENGTH +
-    DOMAIN_PAYLOADS_BYTE_LENGTH;
+    DOMAIN_PAYLOADS_LIST_BYTE_LENGTH;
 
   const doughnut = new Uint8Array(doughnutLength);
   // 7bit LE permission domain count
@@ -230,7 +230,7 @@ function decode(doughnut) {
   const hasNotBefore = ((doughnut[0] & (1 << 7)) != 0);
   const domainCount = new Number(flipEndianness(doughnut[0] << 1)) + 1;
   const PAYLOAD_METADATA_BYTE_LENGTH = getPayloadMetadataLength(hasNotBefore);
-  const PAYLOAD_LENGTHS_BYTE_LENGTH = DOMAIN_LENGTH_ARRAY_ITEM_BYTE_LENGTH * domainCount;
+  const PAYLOAD_LENGTHS_BYTE_LENGTH = DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH * domainCount;
 
   // cursor, indicating current offset in Uint8Array
   let cursor = 1;
