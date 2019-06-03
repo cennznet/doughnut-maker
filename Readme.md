@@ -19,7 +19,7 @@ Interface {
 }
 ```
 
-## `Doughnut` JSON Object
+## Doughnut JSON Object
 
 A JSON format that may be used to generate a Doughnut, and is returned by the verify function.
 
@@ -40,7 +40,7 @@ Object {
 
 ## `generateDoughnut`
 
-Create a new `Doughnut` certificate, in binary encoding.
+Create a new Doughnut certificate, in binary encoding.
 
 Read more about [payload versions and signing methods](https://github.com/cennznet/doughnut-paper/blob/master/format.md).
 
@@ -55,7 +55,7 @@ generateDoughnut(
 
 ## `verifyDoughnut`
 
-Check a `Doughnut` certificate's validity and return the JSON representation.
+Check a Doughnut certificate's validity and return the JSON representation.
 
 ```
 verifyDoughnut(
