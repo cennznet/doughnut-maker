@@ -1,3 +1,3 @@
-const doughnut = require("./generate");
+const doughnut = require("./doughnut");
 
 module.exports = doughnut;
