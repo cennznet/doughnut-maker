@@ -15,7 +15,7 @@ npm install --save cennznet/doughnut-maker
 ```
 Interface {
 	generate: generateDoughnut,
-	verify verifyDoughnut
+	verify: verifyDoughnut
 }
 ```
 
