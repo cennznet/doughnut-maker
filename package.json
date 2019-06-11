@@ -8,7 +8,7 @@
     "lint": "eslint ./src/* ./src/**/*"
   },
   "author": "Centrality Developers <developers@centrality.ai>",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "@polkadot/util": "^0.92.1",
     "@polkadot/util-crypto": "^0.76.1",
