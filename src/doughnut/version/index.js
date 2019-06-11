@@ -2,11 +2,8 @@
  * Version Encoding *
  ********************/
 const {
-  flipU8aEndianness,
   flipEndianness,
-  numberToLEBytes,
-  LEBytesToNumber,
-} = require("../../util");
+} = require("binary-encoding-utilities");
 
 const VERSION_BYTE_LENGTH = 2;
 const MAX_PAYLOAD_VERSION = 2047
@@ -48,10 +45,6 @@ function encode(
   version[0] = v[0]
 
   return version;
-}
-
-function decode() {
-
 }
 
 function separate(doughnut) {

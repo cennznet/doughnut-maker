@@ -2,16 +2,18 @@
   "name": "doughnut-maker",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ./src/* ./src/**/*"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Centrality Developers <developers@centrality.ai>",
+  "license": "UNLICENSED",
   "dependencies": {
+    "@polkadot/util": "^0.92.1",
     "@polkadot/util-crypto": "^0.76.1",
     "atob": "^2.1.2",
+    "binary-encoding-utilities": "github:cennznet/binary-encoding-utilities#v1.0.0",
     "btoa": "^1.2.1",
     "jest": "^24.7.1"
   },

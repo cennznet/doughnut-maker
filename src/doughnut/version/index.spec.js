@@ -5,7 +5,6 @@ const versionEncoding = require("./");
 
 describe("Version Encoding", () => {
   it("should generate and separate cleanly", () => {
-    const doughnut = new Uint8Array(3);
     const payloadVersion = 2000;
     const signingMethod = 25;
 

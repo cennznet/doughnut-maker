@@ -10,6 +10,18 @@ This package is not yet in the NPM registry, but you may still install it via np
 npm install --save cennznet/doughnut-maker
 ```
 
+## Development
+
+Run tests:
+```
+npm test
+```
+
+Run lint:
+```
+npm run lint
+```
+
 ## API
 
 ```

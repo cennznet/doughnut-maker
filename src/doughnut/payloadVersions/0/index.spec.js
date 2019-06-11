@@ -10,15 +10,14 @@ const { stringToU8a } = require("@polkadot/util");
 const payloadVersion = require("./");
 
 
-
 /*********
  * Setup *
  *********/
 
 let issuerKeyPair;
 let holderKeyPair;
-let v0DoughnutJSON;
-let v0DoughnutJSONWithNotBefore;
+let doughnutJSON;
+let doughnutJSONWithNotBefore;
 
 beforeAll(async () => {
   await cryptoWaitReady();

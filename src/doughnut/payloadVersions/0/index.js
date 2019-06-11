@@ -14,33 +14,14 @@ const PAYLOAD_METADATA_LENGTH_WITHOUT_NOTBEFORE = 69;
 
 const {
   stringToU8a,
-  u8aToString,
 } = require("@polkadot/util");
 const {
   isObject,
-  getPaddedU8a,
-  flipU8aEndianness,
   flipEndianness,
   numberToLEBytes,
   LEBytesToNumber,
-} = require("../../../util");
-
-function getStringFromU8a(array, offset, bytes) {
-  bytes = bytes ? bytes : array.length
-  offset = offset ? offset : 0
-
-  let result = '';
-
-  for (let i = 0; i < bytes; i++) {
-    const val = array[offset + i]
-    if (val > 0) {
-      const character = String.fromCharCode(val);
-      result += character;
-    }
-  }
-
-  return result;
-}
+  getStringFromU8a,
+} = require("binary-encoding-utilities");
 
 function getPayloadMetadataLength(hasNotBefore) {
   return (
@@ -150,9 +131,9 @@ function encode(doughnutJSON) {
   } = doughnutJSON;
 
   const permissionKeys = Object.keys(permissions);
-  const domainCount = permissionKeys.length;
+  const DOMAIN_COUNT = permissionKeys.length;
   const DOMAIN_LENGTHS_LIST_BYTE_LENGTH =
-    domainCount * DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH;
+    DOMAIN_COUNT * DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH;
 
   let DOMAIN_PAYLOADS_LIST_BYTE_LENGTH = 0;
   permissionKeys.forEach((key) => {
@@ -168,7 +149,7 @@ function encode(doughnutJSON) {
 
   const doughnut = new Uint8Array(doughnutLength);
   // 7bit LE permission domain count
-  doughnut[0] = domainCount - 1 // remove 1 to fit 128 in 7bit number
+  doughnut[0] = DOMAIN_COUNT - 1 // remove 1 to fit 128 in 7bit number
   doughnut[0] = doughnut[0] << 1
   doughnut[0] = flipEndianness(doughnut[0])
 
@@ -187,10 +168,10 @@ function encode(doughnutJSON) {
   cursor += PUBLIC_KEY_BYTE_LENGTH;
 
   // apply timestamps
-  numberToLEBytes(expiry, TIMESTAMP_BYTE_LENGTH, doughnut, cursor)
+  numberToLEBytes(expiry, doughnut, TIMESTAMP_BYTE_LENGTH, cursor)
   cursor += TIMESTAMP_BYTE_LENGTH;
   if (hasNotBefore) {
-    numberToLEBytes(notBefore, TIMESTAMP_BYTE_LENGTH, doughnut, cursor)
+    numberToLEBytes(notBefore, doughnut, TIMESTAMP_BYTE_LENGTH, cursor)
     cursor += TIMESTAMP_BYTE_LENGTH;
   }
 
@@ -206,8 +187,8 @@ function encode(doughnutJSON) {
 
     numberToLEBytes(
       domainPayloadLength,
-      DOMAIN_LENGTH_BYTE_LENGTH,
       doughnut,
+      DOMAIN_LENGTH_BYTE_LENGTH,
       cursor
     );
 
@@ -228,9 +209,15 @@ function decode(doughnut) {
   }
 
   const hasNotBefore = ((doughnut[0] & (1 << 7)) != 0);
-  const domainCount = new Number(flipEndianness(doughnut[0] << 1)) + 1;
+  const DOMAIN_COUNT = new Number(
+    flipEndianness(
+      (doughnut[0] << 1) & // shift over the hasNotBefore flag bit
+      ~(1 << 8) // unset the 9th leftmost bit, as this is a 64bit number now
+    )
+  ) + 1;
+
   const PAYLOAD_METADATA_BYTE_LENGTH = getPayloadMetadataLength(hasNotBefore);
-  const PAYLOAD_LENGTHS_BYTE_LENGTH = DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH * domainCount;
+  const PAYLOAD_LENGTHS_BYTE_LENGTH = DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH * DOMAIN_COUNT;
 
   // cursor, indicating current offset in Uint8Array
   let cursor = 1;
@@ -253,12 +240,14 @@ function decode(doughnut) {
     PAYLOAD_METADATA_BYTE_LENGTH +
     PAYLOAD_LENGTHS_BYTE_LENGTH;
   for (
-    let i = domainCount;
+    let i = DOMAIN_COUNT;
     i > 0;
     i--
   ) {
     const domainName = getStringFromU8a(
-      doughnut.slice(cursor, cursor + DOMAIN_NAME_BYTE_LENGTH)
+      doughnut,
+      DOMAIN_NAME_BYTE_LENGTH,
+      cursor,
     )
     cursor += DOMAIN_NAME_BYTE_LENGTH;
 
