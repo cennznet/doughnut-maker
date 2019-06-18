@@ -69,7 +69,7 @@ function generateDoughnut(
 
 function verifyDoughnut(doughnut) {
   if (!(doughnut instanceof Uint8Array)) {
-    throw new Error("Input should be a certificate object");
+    throw new Error("Input should be a Uint8Array");
   }
 
   // separate and decode the version
