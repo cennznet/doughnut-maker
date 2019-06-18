@@ -1,17 +1,17 @@
-/**********************************
- * V0 Signing Method - Schnorrkel *
- **********************************/
+/*******************************
+ * V1 Signing Method - Ed25519 *
+ *******************************/
 const {
-  schnorrkelSign,
-  schnorrkelVerify,
+  naclSign,
+  naclVerify,
 } = require("@polkadot/util-crypto");
 
 const SIGNATURE_BYTE_LENGTH = 64;
 
 module.exports = {
   byteLength: SIGNATURE_BYTE_LENGTH,
-  sign: schnorrkelSign,
-  verify: schnorrkelVerify,
+  sign: naclSign,
+  verify: naclVerify,
   separate(doughnut) {
     return [
       doughnut.slice(0, -64),
