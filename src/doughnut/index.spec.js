@@ -38,9 +38,7 @@ beforeAll(async () => {
   holderKeyPairNacl = naclKeypairFromSeed(
     stringToU8a("cennznetjstest".padEnd(32, " "))
   );
-});
 
-beforeEach(() => {
   v0DoughnutJSON = {
     issuer: issuerKeyPair.publicKey,
     holder: holderKeyPair.publicKey,

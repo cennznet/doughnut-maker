@@ -71,7 +71,6 @@ function separate(doughnut) {
 }
 
 module.exports = {
-  byteLength: VERSION_BYTE_LENGTH,
   encode,
   separate,
 }

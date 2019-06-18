@@ -6,10 +6,7 @@ const {
   naclVerify,
 } = require("@polkadot/util-crypto");
 
-const SIGNATURE_BYTE_LENGTH = 64;
-
 module.exports = {
-  byteLength: SIGNATURE_BYTE_LENGTH,
   sign: naclSign,
   verify: naclVerify,
   separate(doughnut) {

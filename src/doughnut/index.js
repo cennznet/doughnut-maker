@@ -16,11 +16,10 @@ const payloadVersions = require('./payloadVersions');
 const signingMethods = require('./signingMethods');
 const version = require('./version');
 
-const VERSION_BYTE_LENGTH = version.byteLength;
 
 function generateDoughnut(
   payloadVersion,
-  signingMethod,
+  signigMethodID,
   payload,
   signerKeyPair,
 ) {
@@ -28,44 +27,68 @@ function generateDoughnut(
     throw new Error('That payload version isn\'t supported.');
   }
 
-  if (signingMethods[signingMethod] == null) {
+  if (signingMethods[signigMethodID] == null) {
     throw new Error('That signing method isn\'t supported.');
   }
-  const encode = payloadVersions[payloadVersion].encode;
-  const signature = signingMethods[signingMethod];
-  const SIGNATURE_BYTE_LENGTH = signature.byteLength;
+  const encodePayload = payloadVersions[payloadVersion].encode;
+  const signingMethod = signingMethods[signigMethodID];
 
-  // cursor, indicating current offset in doughnut
-  let cursor = 0;
-
-  const payloadBinary = encode(payload)
-
-  // Uint8Array to hold doughnut
-  const doughnutBinary = new Uint8Array(
-    payloadBinary.length +
-    VERSION_BYTE_LENGTH +
-    SIGNATURE_BYTE_LENGTH
+  // generate the version bytes
+  const versionBinary = version.encode(
+    payloadVersion,
+    signigMethodID,
   );
 
-  // set version
-  const versionBinay = version.encode(payloadVersion, signingMethod);
-  doughnutBinary.set(versionBinay, cursor);
-  cursor += VERSION_BYTE_LENGTH;
+  // generate the payload bytes
+  const payloadBinary = encodePayload(payload)
 
-  // set payload
-  doughnutBinary.set(payloadBinary, cursor);
-  cursor += payloadBinary.length;
+  // the versionAndPayload encoding cursor
+  let versionAndPayloadCursor = 0;
 
-  // set signature
-  const signatureBinary = signature.sign(
-    doughnutBinary.slice(0, cursor),
+  // allocate the message to be signed as Uint8Array
+  const versionAndPayloadBinary =
+    new Uint8Array(
+      versionBinary.length +
+      payloadBinary.length
+    );
+
+  // set the version
+  versionAndPayloadBinary
+    .set(versionBinary, versionAndPayloadCursor);
+  versionAndPayloadCursor += versionBinary.length;
+
+  // set the payload
+  versionAndPayloadBinary
+    .set(payloadBinary, versionAndPayloadCursor);
+  versionAndPayloadCursor += payloadBinary.length;
+
+  // generate the signature bytes
+  const signatureBinary = signingMethod.sign(
+    versionAndPayloadBinary,
     signerKeyPair
   );
-  doughnutBinary.set(signatureBinary, cursor);
-  cursor += SIGNATURE_BYTE_LENGTH;
+
+  // allocate the doughnut Uint8Array
+  const doughnutBinary = new Uint8Array(
+    versionAndPayloadBinary.length +
+    signatureBinary.length
+  );
+
+  // the doughnut encoding cursor
+  let doughnutCursor = 0;
+
+  // set the versionAndPayloadBinary
+  doughnutBinary.set(versionAndPayloadBinary, doughnutCursor);
+  doughnutCursor += versionAndPayloadBinary.length;
+
+  // set the signature
+  doughnutBinary.set(signatureBinary, doughnutCursor);
+  doughnutCursor += signatureBinary.length;
 
   return doughnutBinary;
 }
+
+
 
 function verifyDoughnut(doughnut) {
   if (!(doughnut instanceof Uint8Array)) {
@@ -73,30 +96,30 @@ function verifyDoughnut(doughnut) {
   }
 
   // separate and decode the version
-  const [payloadVersion, signingMethod, payloadAndSigBinary] =
+  const [payloadVersion, signingMethodID, payloadAndSigBinary] =
     version.separate(doughnut)
 
   // validate the version numbers
   if (payloadVersions[payloadVersion] == null) {
     throw new Error('That payload version isn\'t supported.');
   }
-  if (signingMethods[signingMethod] == null) {
+  if (signingMethods[signingMethodID] == null) {
     throw new Error('That signing method isn\'t supported.');
   }
 
   // get relevant payload version and signing method
-  const signature = signingMethods[signingMethod];
-  const decode = payloadVersions[payloadVersion].decode;
+  const signingMethod = signingMethods[signingMethodID];
+  const decodePayload = payloadVersions[payloadVersion].decode;
 
   // separate the signature from the payload
   const [payloadBinary, signatureBinary] =
-    signature.separate(payloadAndSigBinary);
+    signingMethod.separate(payloadAndSigBinary);
 
   // decode the payload
-  const decodedDoughnut = decode(payloadBinary);
+  const decodedDoughnut = decodePayload(payloadBinary);
 
-  const issuerValid = signature.verify(
-    signature.separate(doughnut)[0],
+  const issuerValid = signingMethod.verify(
+    signingMethod.separate(doughnut)[0],
     signatureBinary,
     decodedDoughnut.issuer
   );
@@ -109,6 +132,8 @@ function verifyDoughnut(doughnut) {
 
   return decodedDoughnut;
 }
+
+
 
 module.exports = {
   generate: generateDoughnut,
