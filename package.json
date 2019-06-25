@@ -1,7 +1,7 @@
 {
   "name": "doughnut-maker",
   "version": "1.0.0",
-  "description": "",
+  "description": "The Doughnut Maker generates, validates, and unpacks [Doughnut certificates](https://github.com/cennznet/doughnut-paper).",
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
@@ -20,5 +20,24 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-plugin-jest": "^22.5.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cennznet/doughnut-maker.git"
+  },
+  "keywords": [
+    "doughnut",
+    "maker",
+    "doughnut-maker",
+    "proof",
+    "of",
+    "delegation",
+    "decentralised",
+    "SSO",
+    "identity"
+  ],
+  "bugs": {
+    "url": "https://github.com/cennznet/doughnut-maker/issues"
+  },
+  "homepage": "https://github.com/cennznet/doughnut-maker#readme"
 }
