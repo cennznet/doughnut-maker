@@ -41,7 +41,7 @@ describe("Signing Method 1", () => {
       signer.publicKey,
     );
 
-    expect(valid);
+    expect(valid).toBe(true);
   });
 
   it("should separate cleanly", () => {
