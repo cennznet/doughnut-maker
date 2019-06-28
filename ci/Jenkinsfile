@@ -28,18 +28,12 @@ pipeline {
         }
 
         stage('Lint') {
-            environment {
-                GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
-            }
             steps {
                 sh 'docker run $SERVICE_NAME npm run lint'
             }
         }
 
         stage('Test') {
-            environment {
-                GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
-            }
             steps {
                 sh 'docker run -e GEMFURY_TOKEN=$GEMFURY_TOKEN $SERVICE_NAME npm test'
             }
