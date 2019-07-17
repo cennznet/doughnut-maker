@@ -7,15 +7,20 @@ const {
   schnorrkelVerify,
 } = require("@polkadot/util-crypto");
 
-// Wrap schnorrkel signing to await wasm crypto readiness
-async function sign(payload, keypair) {
-    await cryptoWaitReady();
-    return schnorrkelSign(payload, keypair);
+// Wrap schnorrkel functions to await wasm crypto readiness
+async function sign(payload, keyPair) {
+  await cryptoWaitReady();
+  return schnorrkelSign(payload, keyPair);
+}
+
+async function verify(payload, signature, issuerPublicKey) {
+  await cryptoWaitReady();
+  return schnorrkelVerify(payload, signature, issuerPublicKey);
 }
 
 module.exports = {
   sign: sign,
-  verify: schnorrkelVerify,
+  verify: verify,
   separate(doughnut) {
     return [
       doughnut.slice(0, -64),

@@ -99,7 +99,7 @@ describe("Generate Doughnut", () => {
       issuerKeyPair,
     );
 
-    doughnutSDK.verify(doughnut)
+    await doughnutSDK.verify(doughnut)
   });
 
 
@@ -114,7 +114,7 @@ describe("Generate Doughnut", () => {
       issuerKeyPair,
     );
 
-    doughnutSDK.verify(doughnut)
+    await doughnutSDK.verify(doughnut)
   });
 
 
@@ -129,7 +129,7 @@ describe("Generate Doughnut", () => {
       issuerKeyPairNacl,
     );
 
-    doughnutSDK.verify(doughnut)
+    await doughnutSDK.verify(doughnut)
   });
 
   it("should generate a valid v0,s1 doughnut with a not before", async () => {
@@ -143,7 +143,7 @@ describe("Generate Doughnut", () => {
       issuerKeyPairNacl,
     );
 
-    doughnutSDK.verify(doughnut)
+    await doughnutSDK.verify(doughnut)
   });
 });
 

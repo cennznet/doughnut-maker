@@ -35,7 +35,7 @@ describe("Signing Method 1", () => {
 
     const [m, s] = signingMethod.separate(concated);
 
-    const valid = signingMethod.verify(
+    const valid = await signingMethod.verify(
       m,
       s,
       signer.publicKey,
