@@ -88,11 +88,11 @@ beforeAll(async () => {
  *********/
 
 describe("Generate Doughnut", () => {
-  it("should generate a valid v0,s0 doughnut without a not before", () => {
+  it("should generate a valid v0,s0 doughnut without a not before", async () => {
     const payloadVersion = 0;
     const signingMethod = 0;
 
-    const doughnut = doughnutSDK.generate(
+    const doughnut = await doughnutSDK.generate(
       payloadVersion,
       signingMethod,
       v0DoughnutJSON,
@@ -103,11 +103,11 @@ describe("Generate Doughnut", () => {
   });
 
 
-  it("should generate a valid v0,s0 doughnut with a not before", () => {
+  it("should generate a valid v0,s0 doughnut with a not before", async () => {
     const payloadVersion = 0;
     const signingMethod = 0;
 
-    const doughnut = doughnutSDK.generate(
+    const doughnut = await doughnutSDK.generate(
       payloadVersion,
       signingMethod,
       v0DoughnutJSONWithNotBefore,
@@ -118,11 +118,11 @@ describe("Generate Doughnut", () => {
   });
 
 
-  it("should generate a valid v0,s1 doughnut without a not before", () => {
+  it("should generate a valid v0,s1 doughnut without a not before", async () => {
     const payloadVersion = 0;
     const signingMethod = 1;
 
-    const doughnut = doughnutSDK.generate(
+    const doughnut = await doughnutSDK.generate(
       payloadVersion,
       signingMethod,
       v0DoughnutJSONNacl,
@@ -132,11 +132,11 @@ describe("Generate Doughnut", () => {
     doughnutSDK.verify(doughnut)
   });
 
-  it("should generate a valid v0,s1 doughnut with a not before", () => {
+  it("should generate a valid v0,s1 doughnut with a not before", async () => {
     const payloadVersion = 0;
     const signingMethod = 1;
 
-    const doughnut = doughnutSDK.generate(
+    const doughnut = await doughnutSDK.generate(
       payloadVersion,
       signingMethod,
       v0DoughnutJSONWithNotBeforeNacl,

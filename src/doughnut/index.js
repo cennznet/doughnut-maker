@@ -17,7 +17,7 @@ const signingMethods = require('./signingMethods');
 const version = require('./version');
 
 
-function generateDoughnut(
+async function generateDoughnut(
   payloadVersion,
   signigMethodID,
   payload,
@@ -63,7 +63,7 @@ function generateDoughnut(
   versionAndPayloadCursor += payloadBinary.length;
 
   // generate the signature bytes
-  const signatureBinary = signingMethod.sign(
+  const signatureBinary = await signingMethod.sign(
     versionAndPayloadBinary,
     signerKeyPair
   );

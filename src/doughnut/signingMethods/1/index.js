@@ -6,8 +6,12 @@ const {
   naclVerify,
 } = require("@polkadot/util-crypto");
 
+async function sign(payload, keypair) {
+  return naclSign(payload, keypair)
+}
+
 module.exports = {
-  sign: naclSign,
+  sign: sign,
   verify: naclVerify,
   separate(doughnut) {
     return [
