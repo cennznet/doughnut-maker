@@ -18,11 +18,11 @@ describe("Signing Method 1", () => {
     );
   });
 
-  it("should create a valid v1 signature", () => {
+  it("should create a valid v1 signature", async () => {
     const payload = [0,1,2,3,4,5,6,7,8];
     const message = new Uint8Array(payload);
 
-    const signature = signingMethod.sign(
+    const signature = await signingMethod.sign(
       message,
       signer,
     );
