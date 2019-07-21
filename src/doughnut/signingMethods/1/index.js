@@ -6,7 +6,8 @@ const {
   naclVerify,
 } = require("@polkadot/util-crypto");
 
-// async is not needed here but it is required to present a consistent interface with other singing methods (e.g. schnorrkel)
+// `async` is not needed here but it is required to present a consistent interface with
+// other singing methods (i.e schnorrkel / sr25519)
 async function sign(payload, keyPair) {
   return naclSign(payload, keyPair)
 }
@@ -16,8 +17,8 @@ async function verify(payload, signature, issuerPublicKey) {
 }
 
 module.exports = {
-  sign: sign,
-  verify: verify,
+  sign,
+  verify,
   separate(doughnut) {
     return [
       doughnut.slice(0, -64),

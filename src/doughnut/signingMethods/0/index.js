@@ -19,8 +19,8 @@ async function verify(payload, signature, issuerPublicKey) {
 }
 
 module.exports = {
-  sign: sign,
-  verify: verify,
+  sign,
+  verify,
   separate(doughnut) {
     return [
       doughnut.slice(0, -64),
