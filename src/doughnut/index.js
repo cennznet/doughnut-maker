@@ -17,7 +17,7 @@ const signingMethods = require('./signingMethods');
 const version = require('./version');
 
 
-function generateDoughnut(
+async function generateDoughnut(
   payloadVersion,
   signigMethodID,
   payload,
@@ -63,7 +63,7 @@ function generateDoughnut(
   versionAndPayloadCursor += payloadBinary.length;
 
   // generate the signature bytes
-  const signatureBinary = signingMethod.sign(
+  const signatureBinary = await signingMethod.sign(
     versionAndPayloadBinary,
     signerKeyPair
   );
@@ -90,7 +90,7 @@ function generateDoughnut(
 
 
 
-function verifyDoughnut(doughnut) {
+async function verifyDoughnut(doughnut) {
   if (!(doughnut instanceof Uint8Array)) {
     throw new Error("Input should be a Uint8Array");
   }
@@ -118,7 +118,7 @@ function verifyDoughnut(doughnut) {
   // decode the payload
   const decodedDoughnut = decodePayload(payloadBinary);
 
-  const issuerValid = signingMethod.verify(
+  const issuerValid = await signingMethod.verify(
     signingMethod.separate(doughnut)[0],
     signatureBinary,
     decodedDoughnut.issuer
