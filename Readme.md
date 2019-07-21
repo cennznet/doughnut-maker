@@ -57,12 +57,12 @@ Create a new Doughnut certificate, in binary encoding.
 Read more about [payload versions and signing methods](https://github.com/cennznet/doughnut-paper/blob/master/format.md).
 
 ```
-generateDoughnut(
+async generateDoughnut(
   payloadVersion,     // Payload version, currently 0
   signingMethod,      // Signing method, currently 0
   doughnutJSONObject, // The Doughnut JSON Object described above
   signerKeyPair,      // A Schorrkel keypair, as specified by the polkadot crypto utils
-) -> Uint8Array
+) -> Promise<Uint8Array>
 ```
 
 ### `verifyDoughnut`
@@ -70,9 +70,9 @@ generateDoughnut(
 Check a Doughnut certificate's validity and return the JSON representation.
 
 ```
-verifyDoughnut(
+async verifyDoughnut(
 	doughnut: Uint8Array
-) -> Object // returns a DoughnutJSONObject if valid
+) -> Promise<Object> // returns a DoughnutJSONObject if valid
 ```
 
 
@@ -99,16 +99,16 @@ The interface for a signing module is assumed to be:
     separate
 }
 
-sign (
+async sign (
     message: Uint8Array,
     signer: Uint8Array,
-) -> Uint8Array
+) -> Promise<Uint8Array>
 
-verify (
+async verify (
     message,
     signature,
     signerPrivateKey
-) -> Boolean
+) -> Promise<Boolean>
 
 separate (
     doughnut
