@@ -25,6 +25,9 @@
     "type": "git",
     "url": "git+https://github.com/cennznet/doughnut-maker.git"
   },
+  "resolutions": {
+    "handlebars": "^4.5.3"
+ },
   "keywords": [
     "doughnut",
     "maker",
