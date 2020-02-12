@@ -72,7 +72,7 @@ beforeEach(() => {
  *********/
 
 describe("Payload Version 0", () => {
-  it("should encode and decode a valid doughnut payload without NotBefore", () => {
+  it("should encode and decode a valid doughnut payload with NotBefore unspecified", () => {
     const source = doughnutJSON;
     const doughnut = payloadVersion.encode(source);
     const decode = payloadVersion.decode(doughnut);
@@ -82,9 +82,11 @@ describe("Payload Version 0", () => {
     expect(decode.expiry).toEqual(source.expiry);
     expect(decode.notBefore).toEqual(0);
     expect(decode.permissions).toEqual(source.permissions);
+    // Not before bit is unset
+    expect(doughnut[0] & (1 << 7)).toEqual(0);
   });
 
-  it("should encode and decode a valid doughnut payload with NotBefore", () => {
+  it("should encode and decode a valid doughnut payload with NotBefore specified", () => {
     const source = doughnutJSONWithNotBefore;
     const doughnut = payloadVersion.encode(source);
     const decode = payloadVersion.decode(doughnut);
@@ -96,7 +98,7 @@ describe("Payload Version 0", () => {
     expect(decode.permissions).toEqual(source.permissions);
   });
 
-  it("should not encode NotBefore when set to zero", () => {
+  it("should not encode an explicit zero NotBefore", () => {
     const source = doughnutJSONWithZeroNotBefore;
     const doughnut = payloadVersion.encode(source);
     const decode = payloadVersion.decode(doughnut);
@@ -106,6 +108,8 @@ describe("Payload Version 0", () => {
     expect(decode.expiry).toEqual(source.expiry);
     expect(decode.notBefore).toEqual(source.notBefore);
     expect(decode.permissions).toEqual(source.permissions);
+    // Not before bit is unset
+    expect(doughnut[0] & (1 << 7)).toEqual(0);
   });
 });
 
