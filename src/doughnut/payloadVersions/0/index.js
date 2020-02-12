@@ -140,7 +140,7 @@ function encode(doughnutJSON) {
     DOMAIN_PAYLOADS_LIST_BYTE_LENGTH += permissions[key].length;
   });
 
-  const hasNotBefore = notBefore != null;
+  const hasNotBefore = notBefore != null && notBefore > 0;
 
   const doughnutLength =
     getPayloadMetadataLength(hasNotBefore) +
@@ -228,7 +228,7 @@ function decode(doughnut) {
   cursor += PUBLIC_KEY_BYTE_LENGTH;
 
   const expiry = LEBytesToNumber(doughnut, TIMESTAMP_BYTE_LENGTH, cursor);
-  let notBefore;
+  let notBefore = 0;
   cursor += TIMESTAMP_BYTE_LENGTH;
   if (hasNotBefore) {
     notBefore = LEBytesToNumber(doughnut, TIMESTAMP_BYTE_LENGTH, cursor);
@@ -260,18 +260,13 @@ function decode(doughnut) {
     permissions[domainName] = payload;
   }
 
-  const result = {
+  return {
     issuer,
     holder,
+    notBefore,
     expiry,
     permissions,
   }
-
-  if (notBefore) {
-    result.notBefore = notBefore;
-  }
-
-  return result;
 }
 
 module.exports = {

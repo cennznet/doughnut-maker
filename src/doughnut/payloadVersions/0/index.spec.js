@@ -18,6 +18,7 @@ let issuerKeyPair;
 let holderKeyPair;
 let doughnutJSON;
 let doughnutJSONWithNotBefore;
+let doughnutJSONWithZeroNotBefore;
 
 beforeAll(async () => {
   await cryptoWaitReady();
@@ -50,6 +51,18 @@ beforeEach(() => {
       somethingElse: new Uint8Array([35, 231, 113, 42])
     }
   };
+
+  doughnutJSONWithZeroNotBefore = {
+    issuer: issuerKeyPair.publicKey,
+    holder: holderKeyPair.publicKey,
+    expiry: 555555,
+    notBefore: 0,
+    permissions: {
+      something: new Uint8Array([234, 111, 4, 186]),
+      somethingElse: new Uint8Array([35, 231, 113, 42])
+    }
+  };
+
 });
 
 
@@ -67,12 +80,24 @@ describe("Payload Version 0", () => {
     expect(decode.issuer).toEqual(source.issuer);
     expect(decode.holder).toEqual(source.holder);
     expect(decode.expiry).toEqual(source.expiry);
-    expect(decode.notBefore).toEqual(source.notBefore);
+    expect(decode.notBefore).toEqual(0);
     expect(decode.permissions).toEqual(source.permissions);
   });
 
   it("should encode and decode a valid doughnut payload with NotBefore", () => {
     const source = doughnutJSONWithNotBefore;
+    const doughnut = payloadVersion.encode(source);
+    const decode = payloadVersion.decode(doughnut);
+
+    expect(decode.issuer).toEqual(source.issuer);
+    expect(decode.holder).toEqual(source.holder);
+    expect(decode.expiry).toEqual(source.expiry);
+    expect(decode.notBefore).toEqual(source.notBefore);
+    expect(decode.permissions).toEqual(source.permissions);
+  });
+
+  it("should not encode NotBefore when set to zero", () => {
+    const source = doughnutJSONWithZeroNotBefore;
     const doughnut = payloadVersion.encode(source);
     const decode = payloadVersion.decode(doughnut);
 
