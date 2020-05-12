@@ -168,11 +168,10 @@ function encode(doughnutJSON) {
   // 7bit LE permission domain count
   doughnut[0] = DOMAIN_COUNT - 1 // remove 1 to fit 128 in 7bit number
   doughnut[0] = doughnut[0] << 1
-  doughnut[0] = flipEndianness(doughnut[0])
 
   // set the notBefore bit flag as needed
   if (hasNotBefore) {
-    doughnut[0] |= (1 << 7);
+    doughnut[0] |= 1;
   }
 
   // cursor, indicating current offset in Uint8Array
@@ -225,13 +224,8 @@ function decode(doughnut) {
     )
   }
 
-  const hasNotBefore = ((doughnut[0] & (1 << 7)) != 0);
-  const DOMAIN_COUNT = new Number(
-    flipEndianness(
-      (doughnut[0] << 1) & // shift over the hasNotBefore flag bit
-      ~(1 << 8) // unset the 9th leftmost bit, as this is a 64bit number now
-    )
-  ) + 1;
+  const hasNotBefore = ((doughnut[0] & 1) != 0);
+  const DOMAIN_COUNT = ((doughnut[0] >> 1) & 0x7f) + 1;
 
   const PAYLOAD_METADATA_BYTE_LENGTH = getPayloadMetadataLength(hasNotBefore);
   const PAYLOAD_LENGTHS_BYTE_LENGTH = DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH * DOMAIN_COUNT;

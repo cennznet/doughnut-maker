@@ -72,6 +72,14 @@ beforeEach(() => {
  *********/
 
 describe("Payload Version 0", () => {
+  it("check encoded header", () => {
+    // 2 domains, without notBefore
+    expect(payloadVersion.encode(doughnutJSON)[0]).toEqual(0b00000010);
+
+    // 2 domains, with notBefore
+    expect(payloadVersion.encode(doughnutJSONWithNotBefore)[0]).toEqual(0b00000011);
+  });
+
   it("check encoded values of expiry and notBefore", () => {
     const source = doughnutJSONWithNotBefore;
     const encoded = payloadVersion.encode(source);
