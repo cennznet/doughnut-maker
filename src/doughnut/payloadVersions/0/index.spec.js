@@ -72,6 +72,18 @@ beforeEach(() => {
  *********/
 
 describe("Payload Version 0", () => {
+  it("check encoded values of expiry and notBefore", () => {
+    const source = doughnutJSONWithNotBefore;
+    const encoded = payloadVersion.encode(source);
+    const offset = 1 + 32 + 32; // no version in this encoding
+
+    // check expiry (555555 = 0x87a23) is LE
+    expect(encoded.slice(offset, offset + 4)).toEqual(new Uint8Array([0x23, 0x7a, 0x08, 0x00]));
+
+    // check notBefore (1234 = 0x4d2) is LE
+    expect(encoded.slice(offset + 4, offset + 8)).toEqual(new Uint8Array([0xd2, 0x04, 0x00, 0x00]));
+  });
+
   it("should encode and decode a valid doughnut payload with NotBefore unspecified", () => {
     const source = doughnutJSON;
     const doughnut = payloadVersion.encode(source);

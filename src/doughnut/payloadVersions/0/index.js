@@ -23,6 +23,23 @@ const {
   getStringFromU8a,
 } = require("@plugnet/binary-encoding-utilities");
 
+// Convert a number into LE bytes
+function u32ToLeBytes(value, array, offset=0) {
+  array[offset] = value & 0xff;
+  array[offset + 1] = (value >> 8) & 0xff;
+  array[offset + 2] = (value >> 16) & 0xff;
+  array[offset + 3] = (value >> 24) & 0xff;
+}
+
+// Convert a number into LE bytes
+function leBytesToU32(array) {
+  let value = array[0] |
+    (array[1] << 8) |
+    (array[2] << 16) |
+    (array[3] << 24);
+  return value;
+}
+
 function getPayloadMetadataLength(hasNotBefore) {
   return (
     (hasNotBefore) ?
@@ -168,10 +185,10 @@ function encode(doughnutJSON) {
   cursor += PUBLIC_KEY_BYTE_LENGTH;
 
   // apply timestamps
-  numberToLEBytes(expiry, doughnut, TIMESTAMP_BYTE_LENGTH, cursor)
+  u32ToLeBytes(expiry, doughnut, cursor)
   cursor += TIMESTAMP_BYTE_LENGTH;
   if (hasNotBefore) {
-    numberToLEBytes(notBefore, doughnut, TIMESTAMP_BYTE_LENGTH, cursor)
+    u32ToLeBytes(notBefore, doughnut, cursor)
     cursor += TIMESTAMP_BYTE_LENGTH;
   }
 
@@ -227,11 +244,11 @@ function decode(doughnut) {
   const holder = doughnut.slice(cursor, cursor + PUBLIC_KEY_BYTE_LENGTH);
   cursor += PUBLIC_KEY_BYTE_LENGTH;
 
-  const expiry = LEBytesToNumber(doughnut, TIMESTAMP_BYTE_LENGTH, cursor);
+  const expiry = leBytesToU32(doughnut.slice(cursor, cursor + TIMESTAMP_BYTE_LENGTH));
   let notBefore = 0;
   cursor += TIMESTAMP_BYTE_LENGTH;
   if (hasNotBefore) {
-    notBefore = LEBytesToNumber(doughnut, TIMESTAMP_BYTE_LENGTH, cursor);
+    notBefore = leBytesToU32(doughnut.slice(cursor, cursor + TIMESTAMP_BYTE_LENGTH));
     cursor += TIMESTAMP_BYTE_LENGTH;
   }
 
