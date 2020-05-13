@@ -1,9 +1,6 @@
 /********************
  * Version Encoding *
  ********************/
-const {
-  flipEndianness,
-} = require("@plugnet/binary-encoding-utilities");
 
 const VERSION_BYTE_LENGTH = 2;
 const VERSION_MASK = 0x07ff;
