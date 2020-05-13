@@ -17,9 +17,6 @@ const {
 } = require("@polkadot/util");
 const {
   isObject,
-  flipEndianness,
-  numberToLEBytes,
-  LEBytesToNumber,
   getStringFromU8a,
 } = require("@plugnet/binary-encoding-utilities");
 
@@ -201,14 +198,8 @@ function encode(doughnutJSON) {
     doughnut.set(binaryDomainKey, cursor)
     cursor += DOMAIN_NAME_BYTE_LENGTH;
 
-    numberToLEBytes(
-      domainPayloadLength,
-      doughnut,
-      DOMAIN_LENGTH_BYTE_LENGTH,
-      cursor
-    );
-
-    cursor += DOMAIN_LENGTH_BYTE_LENGTH;
+    doughnut[cursor++] = domainPayloadLength & 0xff;
+    doughnut[cursor++] = (domainPayloadLength >> 8) & 0xff;
 
     doughnut.set(domainPayload, payloadsCursor);
     payloadsCursor += domainPayloadLength;
@@ -262,7 +253,7 @@ function decode(doughnut) {
     )
     cursor += DOMAIN_NAME_BYTE_LENGTH;
 
-    const payloadLength = LEBytesToNumber(doughnut, DOMAIN_LENGTH_BYTE_LENGTH, cursor);
+    const payloadLength = (doughnut[cursor] + (doughnut[cursor + 1] << 8)) & 0xffff;
     cursor += DOMAIN_LENGTH_BYTE_LENGTH;
 
     const payload = doughnut.slice(payloadCursor, payloadCursor + payloadLength);
