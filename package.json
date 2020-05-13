@@ -10,10 +10,10 @@
   "author": "Centrality Developers <developers@centrality.ai>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@polkadot/util": "^0.92.1",
-    "@polkadot/util-crypto": "^0.76.1",
-    "atob": "^2.1.2",
     "@plugnet/binary-encoding-utilities": "^1.0.0",
+    "@polkadot/util": "^0.92.1",
+    "@polkadot/util-crypto": "^2.3.1",
+    "atob": "^2.1.2",
     "btoa": "^1.2.1",
     "jest": "^24.7.1"
   },
