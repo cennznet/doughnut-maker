@@ -1,71 +1,50 @@
 /********************
  * Version Encoding *
  ********************/
-const {
-  flipEndianness,
-} = require("@plugnet/binary-encoding-utilities");
 
 const VERSION_BYTE_LENGTH = 2;
-const MAX_PAYLOAD_VERSION = 2047
-const MAX_SIGNING_METHOD = 31
+const VERSION_MASK = 0x07ff;
+const SIGNATURE_MASK = 0x1f;
+const SIGNATURE_OFFSET = 11;
 
 function encode(
   payloadVersion,
   signingMethod,
 ) {
-  if (payloadVersion > MAX_PAYLOAD_VERSION) {
+  if (payloadVersion > VERSION_MASK) {
     throw new Error(
-      `Doughnut payload version may not be higher than ${MAX_PAYLOAD_VERSION}.`
+      `Doughnut payload version may not be higher than ${VERSION_MASK}.`
     )
   }
-  if (signingMethod > MAX_SIGNING_METHOD) {
+  if (signingMethod > SIGNATURE_MASK) {
     throw new Error(
-      `Doughnut signing method may not be higher than ${MAX_SIGNING_METHOD}.`
+      `Doughnut signing method may not be higher than ${SIGNATURE_MASK}.`
     )
   }
 
-  let v = new Uint16Array(1);
-
-  // build payload version
-  v[0] = payloadVersion;
-  v[0] = flipEndianness(v[0], 16)
-
-  // build signing method 5bit uInt
-  const s = new Uint8Array(1);
-  s[0] = signingMethod;
-  s[0] = flipEndianness(s[0], 8) >> 3;
-
-  // attach signing method to version
-  v[0] |= s[0]
+  let version = payloadVersion & VERSION_MASK;
+  version |= (signingMethod & SIGNATURE_MASK) << SIGNATURE_OFFSET;
 
   // final version u8a
-  let version = new Uint8Array(VERSION_BYTE_LENGTH);
-  version[1] = v[0]
-  v[0] = v[0] >> 8;
-  version[0] = v[0]
+  let encoded = new Uint8Array(VERSION_BYTE_LENGTH);
+  encoded[0] = version & 0xff;
+  encoded[1] = (version >> 8) & 0xff;
 
-  return version;
+  return encoded;
 }
 
 function separate(doughnut) {
-  let v = new Uint16Array(1);
-
-  v[0] |= doughnut[0];
-  v[0] = v[0] << 8;
-  v[0] |= doughnut[1];
+  let version = (doughnut[1] << 8 | doughnut[0]) & 0xffff;
 
   // signing method
-  const s = new Uint8Array(1);
-  s[0] = (v[0] & 0b00011111) << 3;
-  s[0] = flipEndianness(s, 8);
+  const signingMethod = (version >> SIGNATURE_OFFSET) & SIGNATURE_MASK;
 
   // payload version
-  v[0] &= 0b1111111111100000;
-  v[0] = flipEndianness(v, 16);
+  const payloadVersion = version & VERSION_MASK;
 
   return [
-    v[0],
-    s[0],
+    payloadVersion,
+    signingMethod,
     doughnut.slice(2)
   ]
 }

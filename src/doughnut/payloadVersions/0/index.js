@@ -17,11 +17,25 @@ const {
 } = require("@polkadot/util");
 const {
   isObject,
-  flipEndianness,
-  numberToLEBytes,
-  LEBytesToNumber,
   getStringFromU8a,
 } = require("@plugnet/binary-encoding-utilities");
+
+// Convert a number into LE bytes
+function u32ToLeBytes(value, array, offset=0) {
+  array[offset] = value & 0xff;
+  array[offset + 1] = (value >> 8) & 0xff;
+  array[offset + 2] = (value >> 16) & 0xff;
+  array[offset + 3] = (value >> 24) & 0xff;
+}
+
+// Convert LE bytes into a number
+function leBytesToU32(array) {
+  let value = array[0] |
+    (array[1] << 8) |
+    (array[2] << 16) |
+    (array[3] << 24);
+  return value;
+}
 
 function getPayloadMetadataLength(hasNotBefore) {
   return (
@@ -151,11 +165,10 @@ function encode(doughnutJSON) {
   // 7bit LE permission domain count
   doughnut[0] = DOMAIN_COUNT - 1 // remove 1 to fit 128 in 7bit number
   doughnut[0] = doughnut[0] << 1
-  doughnut[0] = flipEndianness(doughnut[0])
 
   // set the notBefore bit flag as needed
   if (hasNotBefore) {
-    doughnut[0] |= (1 << 7);
+    doughnut[0] |= 1;
   }
 
   // cursor, indicating current offset in Uint8Array
@@ -168,10 +181,10 @@ function encode(doughnutJSON) {
   cursor += PUBLIC_KEY_BYTE_LENGTH;
 
   // apply timestamps
-  numberToLEBytes(expiry, doughnut, TIMESTAMP_BYTE_LENGTH, cursor)
+  u32ToLeBytes(expiry, doughnut, cursor)
   cursor += TIMESTAMP_BYTE_LENGTH;
   if (hasNotBefore) {
-    numberToLEBytes(notBefore, doughnut, TIMESTAMP_BYTE_LENGTH, cursor)
+    u32ToLeBytes(notBefore, doughnut, cursor)
     cursor += TIMESTAMP_BYTE_LENGTH;
   }
 
@@ -185,14 +198,8 @@ function encode(doughnutJSON) {
     doughnut.set(binaryDomainKey, cursor)
     cursor += DOMAIN_NAME_BYTE_LENGTH;
 
-    numberToLEBytes(
-      domainPayloadLength,
-      doughnut,
-      DOMAIN_LENGTH_BYTE_LENGTH,
-      cursor
-    );
-
-    cursor += DOMAIN_LENGTH_BYTE_LENGTH;
+    doughnut[cursor++] = domainPayloadLength & 0xff;
+    doughnut[cursor++] = (domainPayloadLength >> 8) & 0xff;
 
     doughnut.set(domainPayload, payloadsCursor);
     payloadsCursor += domainPayloadLength;
@@ -208,13 +215,8 @@ function decode(doughnut) {
     )
   }
 
-  const hasNotBefore = ((doughnut[0] & (1 << 7)) != 0);
-  const DOMAIN_COUNT = new Number(
-    flipEndianness(
-      (doughnut[0] << 1) & // shift over the hasNotBefore flag bit
-      ~(1 << 8) // unset the 9th leftmost bit, as this is a 64bit number now
-    )
-  ) + 1;
+  const hasNotBefore = ((doughnut[0] & 1) != 0);
+  const DOMAIN_COUNT = ((doughnut[0] >> 1) & 0x7f) + 1;
 
   const PAYLOAD_METADATA_BYTE_LENGTH = getPayloadMetadataLength(hasNotBefore);
   const PAYLOAD_LENGTHS_BYTE_LENGTH = DOMAIN_LENGTHS_LIST_ITEM_BYTE_LENGTH * DOMAIN_COUNT;
@@ -227,11 +229,11 @@ function decode(doughnut) {
   const holder = doughnut.slice(cursor, cursor + PUBLIC_KEY_BYTE_LENGTH);
   cursor += PUBLIC_KEY_BYTE_LENGTH;
 
-  const expiry = LEBytesToNumber(doughnut, TIMESTAMP_BYTE_LENGTH, cursor);
+  const expiry = leBytesToU32(doughnut.slice(cursor, cursor + TIMESTAMP_BYTE_LENGTH));
   let notBefore = 0;
   cursor += TIMESTAMP_BYTE_LENGTH;
   if (hasNotBefore) {
-    notBefore = LEBytesToNumber(doughnut, TIMESTAMP_BYTE_LENGTH, cursor);
+    notBefore = leBytesToU32(doughnut.slice(cursor, cursor + TIMESTAMP_BYTE_LENGTH));
     cursor += TIMESTAMP_BYTE_LENGTH;
   }
 
@@ -251,7 +253,7 @@ function decode(doughnut) {
     )
     cursor += DOMAIN_NAME_BYTE_LENGTH;
 
-    const payloadLength = LEBytesToNumber(doughnut, DOMAIN_LENGTH_BYTE_LENGTH, cursor);
+    const payloadLength = (doughnut[cursor] + (doughnut[cursor + 1] << 8)) & 0xffff;
     cursor += DOMAIN_LENGTH_BYTE_LENGTH;
 
     const payload = doughnut.slice(payloadCursor, payloadCursor + payloadLength);
