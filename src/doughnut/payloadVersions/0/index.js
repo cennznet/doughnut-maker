@@ -28,7 +28,7 @@ function u32ToLeBytes(value, array, offset=0) {
   array[offset + 3] = (value >> 24) & 0xff;
 }
 
-// Convert a number into LE bytes
+// Convert LE bytes into a number
 function leBytesToU32(array) {
   let value = array[0] |
     (array[1] << 8) |
